@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Calculator</title>
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="index.css" />
+	</head>
+	<body>
+		<div class="container">
+			<input class="result" readonly="readonly" id="result" style="grid-area: result;" value="0"></input>
+			<button style="grid-area: number-0;" onclick="num(0)">0</button>
+			<button style="grid-area: number-1;" onclick="num(1)">1</button>
+			<button style="grid-area: number-2;" onclick="num(2)">2</button>
+			<button style="grid-area: number-3;" onclick="num(3)">3</button>
+			<button style="grid-area: number-4;" onclick="num(4)">4</button>
+			<button style="grid-area: number-5;" onclick="num(5)">5</button>
+			<button style="grid-area: number-6;" onclick="num(6)">6</button>
+			<button style="grid-area: number-7;" onclick="num(7)">7</button>
+			<button style="grid-area: number-8;" onclick="num(8)">8</button>
+			<button style="grid-area: number-9;" onclick="num(9)">9</button>
+			<button style="grid-area: btn-on;" onclick="on()">ON</button>
+			<button style="grid-area: btn-add;" onclick="cal('+')">+</button>
+			<button style="grid-area: btn-sub;" onclick="cal('-')">-</button>
+			<button style="grid-area: btn-mul;" onclick="cal('×')">×</button>
+			<button style="grid-area: btn-div;" onclick="cal('÷')">÷</button>
+			<button style="grid-area: btn-per;" onclick="cal('%')">%</button>
+			<button style="grid-area: btn-clear;" onclick="cal('C')">AC</button>
+			<button style="grid-area: btn-cal;" onclick="cal('=')">=</button>
+			<button style="grid-area: btn-dot;" onclick="num_p()">.</button>
+		</div>
+	</body>
+	<script src="index.js" type="text/javascript" charset="utf-8"></script>
+</html>

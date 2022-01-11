@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .q-label{
+            background-color: #F00;
+        }
+    </style>
+    <script type="module">
+        class Graph extends HTMLElement {
+            constructor() {
+                super();
+                let shadow = this.attachShadow({mode:'open'});
+                this.label = document.createElement('span');
+                this.label.innerText = 'graph';
+                this.label.className = 'q-label';
+                shadow.appendChild(this.label);
+
+                setTimeout(function(){
+                    console.log('shadowRoot', this.shadowRoot, 'host', shadow.host, 'label.parentNode', this.label.parentNode, 'label.parentElement',
+                        this.label.parentElement);
+                }.bind(this))
+            }
+        }
+        window.customElements.define('q-graph', Graph);
+
+        class WordCount extends HTMLParagraphElement {
+            updateWordCount(){
+                this.label.textContent = 'Words: ' + this.parentNode.textContent.length;
+            }
+            constructor() {
+                super();
+                let shadow = this.attachShadow({mode:'open'});
+                this.label = document.createElement('span');
+                shadow.appendChild(this.label);
+
+                console.log('shadowRoot', this.shadowRoot, 'host', shadow.host);
+
+                this.updateWordCount();
+
+                // 当元素内容发生变化时更新计数
+                setInterval(function() {
+                    this.updateWordCount();
+                }.bind(this), 200);
+            }
+        }
+        window.customElements.define('q-p', WordCount, {extends: 'p'});
+    </script>
+</head>
+<body>
+<div class="q-label">q-label</div>
+<q-graph></q-graph>
+<p is="q-p"></p>
+
+</body>
+</html>

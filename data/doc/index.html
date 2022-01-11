@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>{{title}}</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="description" content="Description">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="/static/docs/css/theme.css">
+		<link rel="stylesheet" href="/static/docs/css/api.css">
+		<script src="/static/docs/js/mermaid.min.js"></script>
+		<style>
+			.r-fixed {
+				position: fixed;
+				width: 48px;
+				right: 30px;
+				bottom: 10px;
+			}
+
+			.r-fixed .back2top {
+				width: 48px;
+				height: 48px;
+				border-radius: 3px;
+			}
+
+			.r-fixed .back2top {
+				display: block;
+				background: rgba(0, 0, 0, 0.3) url(/static/docs/img/top.png?v=700d0) no-repeat center center
+			}
+
+			.r-fixed .back2top:hover {
+				background-color: #23527c
+			}
+
+			.markdown-section {
+				max-width: 1200px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">加载中</div>
+		<div class="r-fixed" id="back2top"><a class="back2top" title="返回顶部" href="javascript:scroll(0,0)"></a></div>
+
+		<script>
+			window.$docsify = {
+				name: '{{title}}',
+				repo: '',
+				coverpage: true,
+				loadSidebar: true,
+				loadSidebar: 'summary.md',
+				search: 'auto',
+				copyCode: {
+					buttonText: '点击复制',
+					errorText: '错误',
+					successText: '复制'
+				},
+				pagination: {
+					previousText: '上一章节',
+					nextText: '下一章节',
+					crossChapter: true,
+					crossChapterText: true,
+				},
+				markdown: {
+					renderer: {
+						code: function(code, lang) {
+							if (lang === "mermaid") {
+								return (
+									'<div class="mermaid">' + mermaid.render('mermaid-svg-' + num++, code) + "</div>"
+								);
+							}
+							return this.origin.code.apply(this, arguments);
+						}
+					}
+				}
+			}
+			var num = 0;
+			const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+
+			const conf = {
+				logLevel: 4,
+				startOnLoad: false,
+				themeCSS: '.label { font-family: Source Sans Pro,Helvetica Neue,Arial,sans-serif; }'
+			};
+			if (isDarkMode) conf.theme = 'dark';
+			mermaid.initialize(conf);
+			// 当网页向下滑动 20px 出现"返回顶部" 按钮
+			let back2top = document.getElementById("back2top");
+			back2top.style.display = "none";
+			window.onscroll = function() {
+				let num = 100;
+				if (window.scrollY > num || document.documentElement.scrollTop > num) {
+					back2top.style.display = "";
+				} else {
+					back2top.style.display = "none";
+				}
+			};
+		</script>
+		<script src="/static/docs/js/docsify.js"></script>
+		<script src="/static/docs/js/search.js"></script>
+		<script src="/static/docs/js/docsify-copy-code.min.js"></script>
+		<script src="/static/docs/js/docsify-pagination.min.js"></script>
+
+	</body>
+</html>

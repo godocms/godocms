@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加管理员</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../component/ui/css/ui.css" />
+
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="editform">
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="main-container">
+            <div class="layui-form-item">
+                <label class="layui-form-label">登录名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="username" lay-verify="required|len" autocomplete="off" min="3" placeholder="请输入管理员登录名" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password" autocomplete="off" placeholder="请输入登录密码，为空则不修改" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">真实姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" autocomplete="off" placeholder="请输入真实姓名" class="layui-input" lay-verify="required|len" min="2">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mobile" lay-verify="required|phone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
+                </div>
+            </div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">状态</label>
+				<div class="layui-input-block">
+				<input type="radio" name="status" value="0" title="开启" checked>
+				<input type="radio" name="status" value="1" title="关闭">
+				</div>
+			</div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属角色</label>
+                <div class="layui-input-block">
+                   <div id="treearea"></div>
+                </div>
+            </div>
+            
+			  <div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">备注</label>
+				<div class="layui-input-block">
+				<textarea name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+				</div>
+			</div>
+
+            </div>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="button-container">
+            <input type="hidden" name="admin_id">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+        </div>
+    </div>
+</form>
+<script src="../../config/config.js"></script>
+<script src="../../component/layui/layui.js"></script>
+<script src="../../component/ui/ui.js"></script>
+<script>
+    layui.use(['form','layer','tree'], function () {
+        let form = layui.form
+            , layer = layui.layer
+			, $ = layui.$
+			, tree = layui.tree
+            , req = _req();
+        form.verify({
+            len : (val, item) => {
+                let min = item.getAttribute("min")
+                if(val.length > 0 && val.length < min) {
+                    return '长度不能小于' + min;
+                }
+            }
+        })
+           //渲染
+		_get(layui, 'admin/editBefore?id=' + req.id, res => {
+            //console.log(res)
+            form.val("editform",res);
+			tree.render({
+			     elem: '#treearea'//绑定元素
+					,showCheckbox : true
+					,data: res.authList
+					,id: 'trees' //定义索引
+			});
+            tree.setChecked('trees', res.rules);
+		},err => {
+            console.log(err)
+        });
+           
+        
+        //监听提交
+        form.on('submit(user-save)', function (data) {
+			data = data.field;
+			let arr = tree.getChecked('trees');
+			data.rules = getTree(arr);
+            if(data.rules.length < 1){
+                layer.msg("所属角色不能为空");
+                return false;
+            }
+            if(data.password.length > 0 && data.password.length < 6) {
+                layer.msg("密码长度不能小于6位");
+                return false;
+            }
+			_post(layui, 'admin/edit', data, res => {
+				//console.log(res)
+				parent.layui.table.reload("user-table");
+				parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+				
+			})
+           
+            return false;
+        });
+
+
+
+    });
+</script>
+
+</body>
+</html>

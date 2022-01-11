@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>接口参数管理</title>
+		<link rel="stylesheet" href="../../component/ui/css/ui.css" />
+        <style>
+        .layui-table-cell {
+            overflow: visible;
+        }
+        
+        .layui-table-box {
+            overflow: visible;
+        }
+        
+        .layui-table-body {
+            overflow: visible;
+        }
+        /* 设置下拉框的高度与表格单元相同 */
+        td .layui-form-select{
+            margin-top: -3px;
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+    </style>
+	</head>
+	<body class="pear-container">
+        <blockquote class="layui-elem-quote">
+            <button class="layui-btn layui-btn-primary layui-border-red layui-btn-sm" lay-event="addFromDb" onclick="showtab()">
+		        <i class="layui-icon layui-icon-add-1"></i>
+		        数据库新增
+		    </button>
+            <button class="layui-btn layui-btn-primary layui-border-blue layui-btn-sm" lay-event="addPage" onclick="addPage()">
+		        <i class="layui-icon layui-icon-add-1"></i>
+		        分页新增
+		    </button>
+            <button class="layui-btn layui-btn-primary layui-border-block layui-btn-sm" lay-event="addFromManual" onclick="add()">
+		        <i class="layui-icon layui-icon-add-1"></i>
+		        新增单条
+		    </button>
+        </blockquote>
+        <div class="layui-card">
+			<div class="layui-card-body">
+            <form class="layui-form" action="" lay-filter="dataform">
+				<table id="data-table" class="layui-table" lay-filter="data-table">
+                <thead>
+                    <tr>
+                    <th lay-data="{field:'id'}">Id</th>
+                    <th lay-data="{field:'name',edit:true}">名称</th>
+                    <th lay-data="{field:'key',edit:true}">标志</th>
+                    <th lay-data="{field:'def',edit:true}">默认值</th>
+                    <th lay-data="{field:'type'}">类型</th>
+                    <th lay-data="{field:'format'}">格式</th>
+                    <th lay-data="{field:'required'}">是否必填</th>
+                    <th lay-data="{field:'tool',fixed : 'right'}">操作</th>
+                    </tr> 
+                </thead>
+                <tbody id="data-area"></tbody>
+                </table>
+            </form>
+			</div>
+		</div>
+        <div class="layui-tab layui-tab-card" id="tabs-area" style="display:none"></div>
+		
+     <script id="tabs-tpl" type="text/html">
+        
+        <ul class="layui-tab-title">
+        {{#  layui.each(d, function(index, item){ }}
+            <li {{#  if(index == 0){ }}class="layui-this"{{#  }; }}>{{ item.comment ? item.comment : item.name  }}</li>
+        {{#  }); }}
+        </ul>
+        
+        <div class="layui-tab-content" style="height: 100px;" id="tabs-content">
+        {{#  layui.each(d, function(index, item){ }}
+        
+        <div class="layui-tab-item{{#  if(index == 0){ }} layui-show{{#  }; }}">
+        <form class="layui-form" action="" lay-filter="dataformlist">
+            <table id="{{ item.name }}-table" class="layui-table" lay-filter="{{ item.name }}-table">
+                  <colgroup>
+                    <col>
+                    <col>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <tr style="text-align:center">
+                    <th>字段名</th>
+                    <th>中文名</th>
+                    <th>类型</th>
+                    <th>为空</th>
+                    <th>默认值</th>
+                    <th><input type="checkbox" name="chkall" class="chkall" lay-skin="primary"></th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    {{# layui.each(item.child, function(idx, el){ }}
+                    <tr>
+                        <td>{{el.name}}</td>
+                        <td>
+                            {{el.title}}
+                        </td>
+                        <td>
+                            {{el.type}}
+                        </td>
+                        <td>
+                            {{el.isnull}}
+                        </td>
+                        <td>
+                            {{el.def}}
+                        </td>
+                        <td>
+                            <input type="checkbox" name="isck" value="{{item.name}}.{{el.name}}"  lay-skin="primary" {{ el.hasck ? 'checked disabled' : '' }} class="isck"/>
+                        </td>
+                    </tr>
+                    {{#  }); }}
+                </tbody>
+            </table>
+            </form>
+        </div>
+        
+        {{#  }); }}
+        </div>
+        
+        <div class="bottom">
+                <div class="button-container">
+                    <span class="layui-elem-quote">根据模型取表，如需多表可在模型中新增附加表</span>
+                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" id="saveDbFieldsBtn">
+                        <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                    </button>
+                </div>
+        </div>
+        </script>
+        <script type="text/html" id="data-tpl">
+         {{# layui.each(d, function(index, el){ }}
+            <tr>
+                <td>{{el.id}}</td>
+                <td>{{el.name}}</td>
+                <td>{{el.key}}</td>
+                <td>{{el.def}}</td>
+                <td>
+                    <select name="data_type" lay-filter="data_type">
+                        <option value="{{el.id}}_string"{{#  if(el.type == 'string'){ }} selected{{#  }; }}>字符串</option>
+                        <option value="{{el.id}}_number"{{#  if(el.type == 'number'){ }} selected{{#  }; }}>数字</option>
+                    </select>
+                </td>
+                <td>
+                 <select name="data_format" lay-filter="data_format">
+                        <option value="{{el.id}}_"{{#  if(el.format == null){ }} selected{{#  }; }}>无</option>
+                        <option value="{{el.id}}_email"{{#  if(el.format == 'email'){ }} selected{{#  }; }}>邮箱</option>
+                        <option value="{{el.id}}_mobile"{{#  if(el.format == 'mobile'){ }} selected{{#  }; }}>手机号</option>
+                        <option value="{{el.id}}_url"{{#  if(el.format == 'url'){ }} selected{{#  }; }}>网址</option>
+                        <option value="{{el.id}}_image"{{#  if(el.format == 'image'){ }} selected{{#  }; }}>图片</option>
+                        <option value="{{el.id}}_date"{{#  if(el.format == 'date'){ }} selected{{#  }; }}>日期</option>
+                        <option value="{{el.id}}_decimal"{{#  if(el.format == 'decimal'){ }} selected{{#  }; }}>小数</option>
+                        <option value="{{el.id}}_identityCard"{{#  if(el.format == 'identityCard'){ }} selected{{#  }; }}>身份证</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="checkbox" value="{{el.id}}" name="data_required" lay-filter="data_required" {{ el.required == 1 ? 'checked' : '' }}  lay-skin="switch">
+                </td>
+                <td>
+                    <span class="pear-btn pear-btn-primary pear-btn-sm" onclick="edit({{el.id}})"><i class="layui-icon layui-icon-edit"></i></span>
+		            <span class="pear-btn pear-btn-danger pear-btn-sm" onclick="remove({{el.id}})"><i class="layui-icon layui-icon-delete"></i></span>
+                </td>
+            </tr>
+         {{#  }); }}
+        </script>
+		
+	
+		<script src="../../config/config.js"></script>
+		<script src="../../component/layui/layui.js"></script>
+		<script src="../../component/ui/ui.js"></script>
+		<script>
+			layui.use(['table', 'form', 'jquery','common','element','laytpl'], function() {
+				let table = layui.table,
+                    form = layui.form,
+                    $ = layui.jquery,
+                    common = layui.common,
+                    element = layui.element,
+                    laytpl = layui.laytpl,
+                    req = _req(),
+                    tabsBoxIndex;
+                //console.log(req)
+				let MODULE_PATH = "./";
+				
+                _get(layui, 'apiparams/list?aid=' + req.aid, res => {
+                    //console.log(res)
+                    //数据处理
+                    laytpl($('#data-tpl').html()).render(res.list, function(html){
+                        $('#data-area').html(html);
+                        table.init('data-table',{
+                            limit : 1000,
+                            page: false,
+                            skin: 'line'
+                        });
+                        form.render();
+                        table.on('edit(data-table)', function (obj) {
+                            let tdElem = $(this).closest('td'),
+                                old = $(this).prev().text(),
+                                ipt = $(this).parent();
+                            let update = {
+                                id: obj.data.id,
+                                aid : req.aid,
+                                field: obj.field,
+                                value: obj.value
+                            }
+                            //console.log(update)
+                            //return;
+                            _post(layui, 'apiparams/editData', update, res => {
+                                //console.log(res)
+                                layer.msg('更新成功', {
+                                    icon: 1,
+                                    time: 1000
+                                });
+                            }, err => {
+                                let up = {};
+                                up[obj.field] = old;
+                                obj.update(up);
+                                tdElem.click();
+
+                            })
+                        });
+                        form.on('select(data_type)', function(data){
+                            let arr = data.value.split('_'),
+                                id = arr[0]*1,
+                                val = arr[1];
+                            let update = {
+                                id: id,
+                                aid : req.aid,
+                                field: 'type',
+                                value: val
+                            };
+                            _post(layui, 'apiparams/editData', update, res => {
+                                //console.log(res)
+                                layer.msg('更新成功', {
+                                    icon: 1,
+                                    time: 1000
+                                });
+                            })
+                        });   
+                        form.on('select(data_format)', function(data){
+                            let arr = data.value.split('_'),
+                                id = arr[0]*1,
+                                val = arr[1];
+                            let update = {
+                                id: id,
+                                aid : req.aid,
+                                field: 'format',
+                                value: val
+                            };
+                            _post(layui, 'apiparams/editData', update, res => {
+                                //console.log(res)
+                                layer.msg('更新成功', {
+                                    icon: 1,
+                                    time: 1000
+                                });
+                            })
+                        });  
+                        form.on('switch(data_required)', function(data){
+                            let id = data.value,
+                                v = 0;
+                            //console.log(data.elem.checked)
+                            if (data.elem.checked) v = 1;
+                            let update = {
+                                id: id,
+                                aid : req.aid,
+                                field: 'required',
+                                value: v
+                            };
+                            //console.log(update)
+                            //return;
+                            _post(layui, 'apiparams/editData', update, res => {
+                                //console.log(res)
+                                layer.msg('更新成功', {
+                                    icon: 1,
+                                    time: 1000
+                                });
+                            })
+                        });  
+
+                        
+
+                    })
+                    //数据库处理
+
+                    laytpl($('#tabs-tpl').html()).render(res.fields, function(html){
+                        $('#tabs-area').html(html);
+                        form.render();
+                        $('#tabs-content').on('click', e=> {
+                            if(e.target.tagName == 'TD') {
+                                let chk = $(e.target).parent().children().last().children();
+                                //console.log(chk)
+                                if(!chk.prop('checked')) {
+                                    chk.prop('checked', true);
+                                }else{
+                                    chk.prop('checked', false);
+                                }
+                                form.render('checkbox');
+                            }
+                            if(e.target.tagName == 'I' && e.target.parentNode.parentNode.tagName == 'TH') {
+                                let cks = $(e.target).parentsUntil("#tabs-content").find('.isck');
+                                //console.log(cks)
+                                
+                                if(!form.val('dataformlist').chkall) {
+                                    cks.each((i, el) => {
+                                        $(el).prop("checked",true);  
+                                    })
+                                }else{
+                                    //console.log(cks)
+                                    cks.each((i, el) => {
+                                        $(el).removeAttr("checked")
+                                    })
+                                }
+                                form.render('checkbox');
+                            }
+                        });
+                        $('#saveDbFieldsBtn').on('click', e => {
+                            let rt = [];
+                            $(":checkbox").each((id, el) =>{
+                                if($(el).prop('checked')) rt.push($(el).val())
+                            }); 
+                            //console.log(rt)
+                            if(rt.length > 0) {
+                                _post(layui, 'apiparams/addFromDb', {aid : req.aid, fields : rt.join(',')}, res => {
+                                    //console.log(res)
+                                    //layer.msg('添加成功', {icon : 1});
+                                    //把已选中的设为禁止
+                                    //$(":checkbox").each((id, el) =>{
+                                    //    if($(el).prop('checked')) {
+                                    //        $(el).attr('disabled', true)
+                                     //   }
+                                    //}); 
+                                    //layer.close(tabsBoxIndex)
+                                    location.reload();
+                                },
+                                err => {
+                                
+                                })
+                                
+                            }else{
+                                layer.msg('请选择字段', {icon : 2})
+                            }
+                            
+                        })
+                    });
+                })
+                window.showtab = () => {
+                    tabsBoxIndex = layer.open({
+						type: 1,
+						title: '新增字段',
+						shade: 0.1,
+						offset: 'rt',
+						area: ['80%', '100%'],
+						anim: 1,
+						content: $('#tabs-area')
+					});
+                }
+                window.add = function() {
+					layer.open({
+						type: 2,
+						title: '手工新增',
+						shade: 0.1,
+						offset: 'rt',
+						area: ['80%', '100%'],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'params_edit.html?aid=' + req.aid
+					});
+				}
+
+				window.edit = function(id) {
+					layer.open({
+						type: 2,
+						title: '编辑字段',
+						shade: 0.1,
+						offset: 'rt',
+						area: ['80%', '100%'],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'params_edit.html?id=' + id + '&aid=' + req.aid
+					});
+				}
+                window.remove = function(id){
+                    layer.confirm('确定要删除', {icon: 3, title:'提示'}, function(index){
+                        layer.close(index);
+                        _post(layui, 'apiparams/del',{id : id}, res => {
+                            layer.msg('删除成功',{icon:1,time:1000},() => {
+                                location.reload()
+                            });
+                        }, err => {
+                            //layer.msg('删除失败',{icon:2,time:1000});
+                        })
+                    });
+                } 
+                window.addPage = () => {
+                    _post(layui, 'apiparams/addPage', {aid : req.aid}, res => {
+                        layer.msg('添加成功',{icon:1,time:1000},() => {
+                                location.reload()
+                            });
+                    })
+                }
+
+				
+			})
+		</script>
+	</body>
+</html>

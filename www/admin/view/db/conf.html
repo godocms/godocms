@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>数据库配置管理</title>
+		<link rel="stylesheet" href="../../component/ui/css/ui.css" />
+	</head>
+	<body class="pear-container">
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<table id="conf-table" lay-filter="conf-table"></table>
+			</div>
+		</div>
+
+		<script type="text/html" id="conf-toolbar">
+			<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+		        <i class="layui-icon layui-icon-add-1"></i>
+		        新增
+		    </button>
+		    
+		</script>
+
+		<script type="text/html" id="conf-bar">
+			{{# if(d.isdef == 1){ }} 
+			<button class="pear-btn pear-btn-success pear-btn-sm" lay-event= "addBase"> <i class="layui-icon layui-icon-addition"></i>
+			</button>
+			{{# } }}
+			<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+		    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+		</script>
+
+		<script type="text/html" id="conf-enable">
+			<input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="conf-enable" {{ d.isdef== 1 ? 'checked' : '' }} />
+		</script>
+
+		
+
+		<script type="text/html" id="conf-loginTime">
+			{{layui.util.toDateString(d.login_time*1000, 'yyyy-MM-dd HH:mm:ss')}}
+		</script>
+		<script src="../../config/config.js"></script>
+		<script src="../../component/layui/layui.js"></script>
+		<script src="../../component/ui/ui.js"></script>
+		<script>
+			layui.use(['table', 'form', 'jquery','common'], function() {
+				let table = layui.table;
+				let form = layui.form;
+				let $ = layui.jquery;
+				let common = layui.common;
+
+				let MODULE_PATH = "./";
+
+				let cols = [
+					[
+						{
+							title: 'id',
+							field: 'id',
+							align: 'center'
+						}, {
+							title: '数据库名',
+							field: 'database',
+							align: 'center'
+						}, {
+							title: '地址',
+							field: 'host',
+							align: 'center',
+							width: 100
+						}, {
+							title: '用户名',
+							field: 'user',
+							align: 'center'
+						}, {
+							title: '启用',
+							field: 'status',
+							align: 'center',
+							templet: '#conf-enable',
+							width: 120
+						}, {
+							title: '前缀',
+							field: 'prefix',
+							align: 'center'
+						}, {
+							title: '端口',
+							field: 'port',
+							align: 'center'
+						}, {
+							title: '操作',
+							toolbar: '#conf-bar',
+							align: 'center',
+							width: 180
+						}
+					]
+				]
+
+				table.render({
+					elem: '#conf-table',
+					url: apiUrl + 'db/confList',
+					headers: getHeader(),
+					parseData: function(res) {
+						//console.log(res)
+						return {
+							"code": res.code, //解析接口状态
+							"msg": res.message, //解析提示文本
+							"count": res.data.count, //解析数据长度
+							"data": res.data.list //解析数据列表
+						};
+					},
+					page: true,
+					cols: cols,
+					skin: 'line',
+
+					toolbar: '#conf-toolbar',
+					defaultToolbar: [{
+						title: '刷新',
+						layEvent: 'refresh',
+						icon: 'layui-icon-refresh',
+					}, 'filter', 'print', 'exports']
+				});
+
+				table.on('tool(conf-table)', function(obj) {
+					if (obj.event === 'remove') {
+						window.remove(obj);
+					} else if (obj.event === 'edit') {
+						window.edit(obj);
+					} else if (obj.event === 'addBase') {
+						window.addBase(obj);
+					}
+				});
+
+				table.on('toolbar(conf-table)', function(obj) {
+					if (obj.event === 'add') {
+						window.add();
+					} else if (obj.event === 'refresh') {
+						window.refresh();
+					}
+				});
+				// 监听搜索操作
+
+				form.on('submit(conf-query)', function(data) {
+					table.reload('conf-table', {
+						where: {
+							param : $('form').serialize()
+						},
+						page: {
+					        curr: 1
+					    }
+					})
+					return false;
+				});
+				form.on('submit(conf-reset)', function(data){
+					table.reload('conf-table', {
+						where: {
+							param : ''
+						},
+						page: {
+					        curr: 1
+					    }
+					});
+					return false;
+				})
+				form.on('switch(conf-enable)', function(data) {
+					let postData = {
+						id: data.value
+					};
+					_post(layui, 'db/confChange', postData, res => {
+						//console.log(res)
+						//window.refresh();
+						table.reload('conf-table');
+						parent
+							.layui
+							.table
+							.reload("db-table");
+					}, err => {
+						$(data.elem).prop('checked', false);
+						form.render('checkbox');
+					})
+				});
+                window.addBase = function () {
+					let li = layer.open({
+						type: 1,
+						title: '添加数据库',
+						content: '<input type="text" name="basename" id="basename" placeholder="请输入数据库名" class="layui-input">',
+						btn: [
+							'确认', '取消'
+						],
+						yes: function (index, layero) {
+							let basename = $('#basename').val();
+							if (!basename || basename == '') {
+								layer.msg('数据库名不能为空');
+								return false;
+							}
+							_post(layui, 'db/creatDatabase', {
+								name: basename
+							}, res => {
+
+								layer.msg('创建成功');
+								layer.close(li);
+								table.reload('conf-table');
+								parent
+									.layui
+									.table
+									.reload("db-table");
+
+							}, err => {})
+
+						},
+						btn2: function (index, layero) {}
+					});
+				}
+				window.add = function () {
+					layer.open({
+						type: 2,
+						title: '新增',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						content: MODULE_PATH + 'conf-edit.html'
+					});
+				}
+
+				window.edit = function (obj) {
+					layer.open({
+						type: 2,
+						title: '修改',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						content: MODULE_PATH + 'conf-edit.html?id=' + obj.data.id
+					});
+				}
+				window.remove = function (obj) {
+					layer.confirm('确定要删除该数据库连接', {
+						icon: 3,
+						title: '提示'
+					}, function (index) {
+						layer.close(index);
+						_post(layui, 'db/confDel', {
+							id: obj.data.id
+						}, res => {
+							layer.msg('删除成功', {
+								icon: 1,
+								time: 1000
+							}, () => {
+								obj.del();
+								parent
+									.layui
+									.table
+									.reload("db-table");
+							});
+						}, err => {
+							//layer.msg('删除失败',{icon:2,time:1000});
+						})
+					});
+				}
+
+
+				window.refresh = function(param) {
+					table.reload('conf-table');
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>数据库管理</title>
+		<link rel="stylesheet" href="../../component/ui/css/ui.css"/>
+	</head>
+	<body class="pear-container">
+
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<table id="db-table" lay-filter="db-table"></table>
+			</div>
+		</div>
+
+		<script type="text/html" id="db-toolbar">
+			<button class="layui-btn layui-btn-primary layui-border-green layui-btn-sm" lay-event="confList">
+				<i class="layui-icon layui-icon-windows"></i>
+		        数据库
+		    </button>
+			<button class="layui-btn layui-btn-primary layui-border-red layui-btn-sm" lay-event="add">
+				<i class="layui-icon layui-icon-add-1"></i>
+		        新增表
+		    </button>
+			<button class="layui-btn layui-btn-primary layui-border-blue layui-btn-sm" lay-event="mgr" id="mgr">
+				<i class="layui-icon layui-icon-cols"></i>
+				<span>操作</span>
+				<i class="layui-icon layui-icon-triangle-d"></i>
+			</button>
+			<button class="layui-btn layui-btn-primary layui-border-orange layui-btn-sm" lay-event="backup">
+				<i class="layui-icon layui-icon-senior"></i>
+		        备份
+		    </button>
+			<button class="layui-btn layui-btn-primary layui-border-black layui-btn-sm" lay-event="doc">
+				<i class="layui-icon layui-icon-print"></i>
+		        文档
+		    </button>
+			<!--button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+				<i class="layui-icon layui-icon-delete"></i>
+		        删除
+		    </button>
+			<button class="pear-btn pear-btn-success pear-btn-md" lay-event="update">
+				<i class="layui-icon layui-icon-refresh"></i>
+		        更新
+		    </button>
+			
+			<button class="pear-btn pear-btn-md" lay-event="sql">
+				<i class="layui-icon layui-icon-print"></i>
+		        SQL查询
+		    </button>
+			<button class="pear-btn pear-btn-success pear-btn-md" lay-event="reback">
+				<i class="layui-icon layui-icon-senior"></i>
+		        还原
+		    </button-->
+
+		</script>
+
+		<script id="op-bar" type="text/html">
+			<button class="layui-btn layui-btn-primary layui-border-blue layui-btn-sm" lay-event="op" data-id="{{d.Name}}">
+				<i class="layui-icon layui-icon-cols"></i>
+				<span>操作</span>
+				<i class="layui-icon layui-icon-triangle-d"></i>
+			</button>
+		</script>
+
+		<script src="../../config/config.js"></script>
+		<script src="../../component/layui/layui.js"></script>
+		<script src="../../component/ui/ui.js"></script>
+		<script>
+			layui.use([
+				'table',
+				'form',
+				'dropdown',
+				'jquery',
+				'common',
+				'soulTable'
+			], function () {
+				let table = layui.table;
+				let form = layui.form;
+				let $ = layui.jquery;
+				let dropdown = layui.dropdown;
+				let common = layui.common;
+				let soulTable = layui.soulTable;
+
+				let MODULE_PATH = "./";
+
+				let cols = [
+					[
+						{
+							type: 'checkbox'
+						}, {
+							title: '表名',
+							field: 'Name',
+							align: 'center',
+							sort: true,
+							edit: 'text',
+							width: 180,
+							filter: true,
+							align: 'left'
+						}, {
+							title: '中文名',
+							field: 'Comment',
+							align: 'center',
+							edit: 'text',
+							width: 180,
+							filter: true,
+							align: 'left'
+						}, {
+							title: 'AutoID',
+							field: 'Auto_increment',
+							align: 'center',
+							sort: true,
+							edit: 'text'
+						}, {
+							title: '数据',
+							field: 'Rows',
+							align: 'center',
+							sort: true
+						}, {
+							title: '编码',
+							field: 'Collation',
+							align: 'center',
+							hide: true
+						}, {
+							title: '创建时间',
+							field: 'Create_time',
+							align: 'center',
+							sort: true,
+							hide: true
+						}, {
+							title: '更新时间',
+							field: 'Update_time',
+							align: 'center',
+							sort: true,
+							hide: true
+						}, {
+							title: '操作',
+							toolbar: '#op-bar',
+							align: 'center',
+							width: 150,
+							fixed: 'right'
+						}
+					]
+				]
+
+				table.render({
+					elem: '#db-table',
+					url: apiUrl + 'db/list',
+					headers: getHeader(),
+					parseData: function (res) {
+						//console.log(res)
+
+						return {
+							"code": res.code, //解析接口状态
+							"msg": res.message, //解析提示文本
+							"count": res.data.count, //解析数据长度
+							"data": res.data.list //解析数据列表
+						};
+					},
+					height: $(document).height() - $('#db-table')
+						.offset()
+						.top,
+					done: function () {
+						soulTable.render(this)
+					},
+					autoSort: true,
+					page: false,
+					cols: cols,
+					skin: 'line',
+
+					toolbar: '#db-toolbar',
+					defaultToolbar: [
+						{
+							title: '刷新',
+							layEvent: 'refresh',
+							icon: 'layui-icon-refresh'
+						},
+						'filter',
+						'print',
+						'exports'
+					]
+				});
+
+				table.on('tool(db-table)', function (obj) {
+					//if (obj.event === 'op') {
+					dropdown.render({
+						elem: this, show: true, //这个很关键，代表其它事件中触发即显示
+						data: [
+							{
+								title: '查看数据',
+								id: 'opData'
+							}, {
+								title: '编辑表',
+								id: 'edit'
+							}, {
+								title: '复制表',
+								id: 'opCopy'
+							}, {
+								title: '优化表',
+								id: 'opOptimize'
+							}, {
+								title: '修复表',
+								id: 'opRepair'
+							}, {
+								title: '清空表',
+								id: 'opClear'
+							}, {
+								title: '删除表',
+								id: 'remove'
+							}, {
+								title: '看SQL',
+								id: 'viewSql'
+							}
+						],
+						click: function (data, othis) {
+							var elem = $(this.elem),
+								table = elem.data('id'); //表格列表的预埋数据
+							window[data.id](table);
+						}
+					});
+					//}
+
+				});
+
+				table.on('toolbar(db-table)', function (obj) {
+					window[obj.event](obj);
+
+				});
+				table.on('edit(db-table)', function (obj) {
+					//console.log(obj)
+					let old = $(this)
+						.prev()
+						.text();
+					//console.log(old)
+					let update = {
+						table: obj.data.Name,
+						field: obj.field,
+						value: obj.value,
+						old
+					}
+					_post(layui, 'db/editTable', update, res => {
+						//console.log(res)
+
+						if (obj.field == 'Auto_increment') {
+							layer.msg('更新成功，更新自增长后id可能会混乱！', {
+								icon: 3,
+								time: 2000
+							});
+						} else {
+							layer.msg('更新成功', {
+								icon: 1,
+								time: 1000
+							});
+						}
+					}, err => {
+						//console.log(err)
+
+					})
+				});
+				window.mgr = function (obj) {
+					console.log(obj);
+					dropdown.render({
+						elem: '#mgr', show: true, //这个很关键，代表其它事件中触发即显示
+						data: [
+							{
+								title: '批量删表',
+								id: 'batchRemove'
+							}, {
+								title: '更新缓存',
+								id: 'update'
+							}, {
+								title: '还原数据',
+								id: 'reback'
+							}, {
+								title: '加入保护',
+								id: 'addSafe'
+							}, {
+								title: '查看保护',
+								id: 'viewSafe'
+							}, {
+								title: 'SQL查询',
+								id: 'sql'
+							}
+						],
+						click: function (data, othis) {
+							window[data.id](obj);
+						}
+					});
+				}
+				window.update = function () {
+					let index = layer.load(0, {
+						time: 5 * 1000
+					});
+					_post(layui, 'db/update', {}, res => {
+						layer.close(index);
+						layer.msg('更新成功', {
+							icon: 1,
+							time: 1000
+						});
+					})
+				}
+				window.backup = function () {
+					let index = layer.load(0, {
+						time: 5 * 1000
+					}); //显示加载中动画，最多10秒自动关闭
+					_post(layui, 'db/backup', {}, res => {
+						layer.close(index); //关闭加载动画
+						layer.msg('备份成功', {
+							icon: 1,
+							time: 1000
+						});
+					})
+				}
+				window.confList = function () {
+					layer.open({
+						type: 2,
+						title: '数据库管理',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'conf.html'
+					});
+				}
+				window.sql = function () {
+					layer.open({
+						type: 2,
+						title: 'SQL查询',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'sql.html'
+					});
+				}
+				window.viewSql = function (obj) {
+					//console.log(obj)
+					layer.open({
+						type: 2,
+						title: 'SQL查询',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'sql.html?table=' + obj
+					});
+				}
+				window.reback = function () {
+					layer.open({
+						type: 2,
+						title: '还原',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'reback.html'
+					});
+				}
+				window.doc = function () {
+					layer.open({
+						type: 2,
+						title: '文档',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'90%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'doc.html'
+					});
+				}
+				window.add = function () {
+					layer.open({
+						type: 2,
+						title: '新增表',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'creat.html'
+					});
+				}
+
+				window.edit = function (name) {
+					layer.open({
+						type: 2,
+						title: '编辑表-' + name,
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'edit.html?table=' + name
+					});
+				}
+				window.remove = function (obj) {
+					layer.confirm('确定要删除表-'+obj+'？', {
+						icon: 3,
+						title: '提示'
+					}, function (index) {
+						layer.close(index);
+						_post(layui, 'db/delTable', {
+							table: obj
+						}, res => {
+							layer.msg(obj+'删除成功', {
+								icon: 1,
+								time: 1000
+							}, () => {
+								table.reload('db-table');
+							});
+						}, err => {
+							//layer.msg('删除失败',{icon:2,time:1000});
+						})
+					});
+				}
+				window.opData = function (name) {
+					layer.open({
+						type: 2,
+						title: '查看表数据-' + name,
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'90%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'data.html?table=' + name
+					});
+				}
+				window.viewSafe = function (name) {
+					layer.open({
+						type: 2,
+						title: '查看保护',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'90%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'safe.html'
+					});
+				}
+				window.opRepair = function (obj) {
+					let index = layer.load(0, {
+						time: 5 * 1000
+					});
+					_post(layui, 'db/repair', {
+						table: obj
+					}, res => {
+						layer.close(index);
+						layer.msg('修复成功', {
+							icon: 1,
+							time: 1000
+						});
+						table.reload('db-table');
+					})
+				}
+				window.opOptimize = function (obj) {
+					let index = layer.load(0, {
+						time: 5 * 1000
+					});
+					_post(layui, 'db/optimize', {
+						table: obj
+					}, res => {
+						layer.close(index);
+						layer.msg('优化成功', {
+							icon: 1,
+							time: 1000
+						});
+						table.reload('db-table');
+					})
+				}
+				window.opCopy = function (obj) {
+					let index = layer.load(0, {
+						time: 5 * 1000
+					});
+					_post(layui, 'db/opcopy', {
+						table: obj
+					}, res => {
+						layer.close(index);
+						layer.msg('复制成功', {
+							icon: 1,
+							time: 1000
+						});
+						table.reload('db-table');
+					})
+				}
+				window.opClear = function (obj) {
+					layer.confirm('确定要清空该表数据吗？', {
+						icon: 3,
+						title: '提示'
+					}, function (index) {
+						layer.close(index);
+						_post(layui, 'db/clear', {
+							table: obj
+						}, res => {
+							layer.msg('清空成功', {
+								icon: 1,
+								time: 1000
+							}, () => {
+								//obj.del();
+								table.reload('db-table');
+							});
+						}, err => {
+							//layer.msg('删除失败',{icon:2,time:1000});
+						})
+					});
+				}
+				window.addSafe = function (obj) {
+
+					var checkIds = common.checkField(obj, 'Name');
+					//console.log(checkIds)
+					if (checkIds === "") {
+						layer.msg("未选中数据", {
+							icon: 3,
+							time: 1000
+						});
+						return false;
+					}
+					let postData = {
+						names: checkIds
+					};
+					_post(layui, 'db/safeAdd', postData, res => {
+						layer.msg('加入保护成功', {
+							icon: 1,
+							time: 1000
+						}, function () {
+							table.reload('db-table');
+						});
+					});
+				}
+				window.batchRemove = function (obj) {
+
+					var checkIds = common.checkField(obj, 'Name');
+					//console.log(checkIds)
+					if (checkIds === "") {
+						layer.msg("未选中数据", {
+							icon: 3,
+							time: 1000
+						});
+						return false;
+					}
+
+					layer.confirm('确定要删除这些表', {
+						icon: 3,
+						title: '提示'
+					}, function (index) {
+						layer.close(index);
+						let postData = {
+							ids: checkIds
+						};
+						_post(layui, 'db/batchRemove', postData, res => {
+							layer.msg('删除成功', {
+								icon: 1,
+								time: 1000
+							}, function () {
+								table.reload('db-table');
+							});
+						});
+					});
+				}
+				window.refresh = function (param) {
+					table.reload('db-table');
+				}
+			})
+		</script>
+	</body>
+</html>

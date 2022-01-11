@@ -1,0 +1,30 @@
+.q-btn {
+    white-space: nowrap;
+}
+
+.q-from-item input {
+    min-width: 20px;
+    /*padding: 5px 10px;*/
+    line-height: 1.5;
+    flex: 1 1 auto;
+}
+
+.q-input-group, .q-from-item {
+    display: flex;
+    align-items: center;
+}
+
+.q-from-item {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.q-from-item > * {
+    width: 50%;
+    box-sizing: border-box;
+}
+
+.q-from-item > label {
+    text-align: right;
+    padding-right: 15px;
+}

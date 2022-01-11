@@ -1,0 +1,48 @@
+.regexp{
+  width: 650px;
+  margin: 50px auto;
+  font-size: 14px;
+}
+.regexp .backarea{
+  text-align:left;display:block
+}
+.regexp .back{
+  width: 120px;  
+        padding:6px;  
+        background-color: #428bca;  
+        border-color: #357ebd;  
+        color: #fff;  
+        -moz-border-radius: 10px;  
+        -webkit-border-radius: 10px;  
+        border-radius: 10px; /* future proofing */  
+        -khtml-border-radius: 10px; /* for old Konqueror browsers */  
+        text-align: center;  
+        vertical-align: middle;  
+        border: 1px solid transparent;  
+        font-weight: 500;  
+        font-size:100%  
+}
+
+.regexp .title{
+  color:#777;
+  font-size: 24px;
+  text-align: center;
+}
+.regexp .textbox{
+  width: 638px;
+  height: 150px;
+  border:1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  resize: none;
+}
+
+.regexp .readonly{
+  background-color: #eeeeee;
+}
+
+.regexp .textfield{
+  width: 215px;
+  padding: 5px;
+  border:1px solid #ccc;
+}

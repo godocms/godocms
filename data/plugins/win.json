@@ -1,0 +1,8 @@
+{
+    "key": "godo-winui",
+    "url": "win",
+    "path": "godo-winui/godo-winui",
+    "isTest": false,
+    "type": "ui",
+    "name": "winui"
+}

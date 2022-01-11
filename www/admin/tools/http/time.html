@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Tool</title>
+
+  <script type="text/javascript" src="lib/jquery.js" defer></script>
+  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css">
+  <script type="text/javascript" src="lib/bootstrap/js/bootstrap.js" defer></script>
+  <script type="text/javascript" src="js/timestamp.js" defer></script>
+  <link rel="stylesheet" href="lib/nav.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <div class="tool_nav">
+    <ul>
+        <li><a href="./index.html" class="tool_nav-a">HTTP接口</a></li>
+        <li><a href="./ws.html" class="tool_nav-a">WEBSOCKET</a></li>
+        <li><a href="./socketio.html" class="tool_nav-a">SOCKET.IO</a></li>
+        <li><a href="./time.html" class="tool_nav-a tool_active">时间戳转换</a></li>
+    </ul>
+</div>
+
+  <div class="container">
+    <h1>时间戳转换工具</h1>
+    <div class="row">
+      <div class="panel panel-default">
+        <div class="panel panel-heading">
+            时间戳转换
+        </div>
+        <div class="panel panel-body">
+
+          <p>注：单位为秒</p>
+
+        <div class="row">
+          <div class="col-sm-5">
+            <div class="input-group form-group">
+              <span class="input-group-addon" id="basic-addon1">当前时间戳</span>
+              <input type="text" class="form-control" aria-describedby="basic-addon1" id="nowTimestamp">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-5">
+            <div class="input-group form-group">
+              <span class="input-group-addon">Unix时间戳</span>
+              <input id="d_timestamp" type="text" class="form-control time1" value="">
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="form-group">
+              <button type="button" id="d_button" class="btn btn-primary form-control time2date">转日期</button>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="input-group form-group">
+              <span class="input-group-addon">北京时间</span>
+              <input id="d_date" type="text" class="form-control time1-bj" value="">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-5">
+            <div class="input-group form-group">
+              <span class="input-group-addon">北京时间</span>
+              <input id="t_date" type="text" class="form-control time1" value="">
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="form-group">
+              <button id="t_button" type="button" class="btn btn-primary form-control time2date">转时间戳</button>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="input-group form-group">
+              <span class="input-group-addon">时间戳</span>
+              <input id="t_timestamp" type="text" class="form-control time1-bj" value="">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <footer>
+      <h3 class="pull-right"><em></em></h3>
+  </footer>
+</body>
+</html>

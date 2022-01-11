@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑文档管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../component/ui/css/ui.css" />
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="editform">
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="main-container">
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" lay-verify="required|len" autocomplete="off" min="1" placeholder="请输入名称" class="layui-input">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">副标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required|len" autocomplete="off" min="1" placeholder="请输入副标题" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标志</label>
+                <div class="layui-input-block">
+                    <input type="text" name="key" lay-verify="required|len" autocomplete="off" min="2" placeholder="请输入唯一标志，英文" class="layui-input" id="key">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">版本</label>
+                <div class="layui-input-block">
+                    <input type="text" name="version" value="1.0.0" lay-verify="required|len" autocomplete="off" min="2" placeholder="请输入版本号" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">logo</label>
+                
+                 <div class="layui-input-inline">
+                    <input type="text" name="logo" value="" lay-verify="required|len" autocomplete="off" min="2" id="logo" placeholder="logo地址,png格式" class="layui-input" readonly>
+                 </div>
+                 <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-primary layui-border-blue layui-btn-sm" id="uploadBtn">
+                    <i class="layui-icon">&#xe67c;</i>上传
+                    </button>
+                </div>
+            </div>
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">备注</label>
+				<div class="layui-input-block">
+				<textarea name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+				</div>
+			</div>
+
+            </div>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="button-container">
+        <input type='hidden' value="0" name="id" >
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="doc-save">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+        </div>
+    </div>
+</form>
+<script src="../../config/config.js"></script>
+<script src="../../component/layui/layui.js"></script>
+<script src="../../component/ui/ui.js"></script>
+<script>
+    layui.use(['form','layer','upload'], function () {
+        let form = layui.form
+            , layer = layui.layer
+			, $ = layui.$
+            , upload = layui.upload
+            , req = _req();
+        form.verify({
+            len : (val, item) => {
+                let min = item.getAttribute("min")
+                if(val.length < min) {
+                    return '长度不能小于' + min;
+                }
+            }
+        })
+        //
+        //执行实例
+        let uploadInst = upload.render({
+            elem: '#uploadBtn' //绑定元素
+            ,url: apiUrl + 'upload/index' //上传接口
+            ,headers : getHeader()
+            ,exts : 'png'
+            ,field : 'file'
+            ,acceptMime: 'image/*'
+            ,done: function(res){
+            //上传完毕回调
+                console.log(res)
+                $('#logo').val(res.data.path)
+            }
+            ,error: function(){
+            //请求异常回调
+                
+            }
+        });
+
+        if(req.id) {
+            //渲染
+            _get(layui, 'doc/editBefore?id=' + req.id, res => {
+                form.val('editform', res)
+                document.getElementById("key").readOnly = true;
+            });
+        }
+
+        //监听提交
+        form.on('submit(doc-save)', function (data) {
+			data = data.field;
+            let postUrl;
+            if(req.id) {
+                postUrl = 'doc/edit';
+            }else{
+                postUrl = 'doc/add';
+            }
+			_post(layui, postUrl, data, res => {
+				//console.log(res)
+				parent.layui.table.reload("doc-table");
+				parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+
+			})
+
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>

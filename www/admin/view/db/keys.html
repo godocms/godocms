@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>管理员管理</title>
+		<link rel="stylesheet" href="../../component/ui/css/ui.css" />
+	</head>
+	<body class="pear-container">
+			
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<table id="user-table" lay-filter="user-table"></table>
+			</div>
+		</div>
+
+
+		<script type="text/html" id="del-bar">
+		    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+		</script>
+
+		<script src="../../config/config.js"></script>
+		<script src="../../component/layui/layui.js"></script>
+		<script src="../../component/ui/ui.js"></script>
+		<script>
+			layui.use(['table', 'form', 'jquery','common'], function() {
+				let table = layui.table;
+				let form = layui.form;
+				let $ = layui.jquery;
+				let common = layui.common,
+                    req = _req();
+
+				let MODULE_PATH = "./";
+
+				let cols = [
+					[
+						{
+							title: '名称',
+							field: 'name',
+							align: 'center'
+						},
+						{
+							title: '类型',
+							field: 'type',
+							align: 'center'
+						},
+						{
+							title: '字段',
+							field: 'fields',
+							align: 'center'
+						},
+						
+						{
+							title: '操作',
+							toolbar: '#del-bar',
+							align: 'center',
+							width: 80
+						}
+					]
+				]
+
+				table.render({
+					elem: '#user-table',
+					url: apiUrl + 'db/keysList?table=' + req.table,
+					headers : getHeader(),
+					parseData: function(res) {
+						//console.log(res)
+						return {
+							"code": res.code, //解析接口状态
+							"msg": res.message, //解析提示文本
+							"count": res.data.count, //解析数据长度
+							"data": res.data.list //解析数据列表
+						};
+					},
+					page: true,
+					cols: cols,
+					skin: 'line'
+				});
+
+				table.on('tool(user-table)', function(obj) {
+					if (obj.event === 'remove') {
+						//window.remove(obj);
+						layer.confirm('确定要删除该字段吗？', {
+						icon: 3,
+						title: '提示'
+					}, function (index) {
+						layer.close(index);
+						let postdata = {
+							table : req.table,
+							name : obj.data.name
+						}
+						console.log(postdata)
+						_post(layui, 'db/delKey',postdata, res => {
+							layer.msg('删除成功', {
+								icon: 1,
+								time: 1000
+							}, () => {
+								obj.del();
+								table.reload('user-table');
+							});
+						}, err => {
+							
+						})
+					})
+						
+					}
+				});
+			})
+		</script>
+	</body>
+</html>

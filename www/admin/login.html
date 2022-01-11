@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>后台管理-登陆</title>
+		<!-- 样 式 文 件 -->
+		<link rel="stylesheet" href="component/ui/css/ui.css" />
+		<link rel="stylesheet" href="admin/css/other/login.css" />
+	</head>
+    <!-- 代 码 结 构 -->
+	<body background="admin/images/background.svg" style="background-size: cover;">
+		<form class="layui-form" action="javascript:void(0);">
+			<div class="layui-form-item">
+				<img class="logo" src="/static/logo.png" />
+				<div class="title">Godo Cms</div>
+				<div class="desc">
+					打造最实用的低代码平台
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<input placeholder="账 户" value="admin" name="username" lay-verify="required" hover class="layui-input"  />
+			</div>
+			<div class="layui-form-item">
+				<input placeholder="密 码" name="password" value="admin" lay-verify="required" hover class="layui-input" type="password" />
+			</div>
+			<div class="layui-form-item">
+				<input placeholder="验证码" name="captcha" id="captcha"  hover  lay-verify="required" class="code layui-input layui-input-inline"  />
+				<img src="" id="codeImage" class="codeImage" />
+			</div>
+			<div class="layui-form-item">
+				<input type="checkbox" name="" title="记住密码" lay-skin="primary" checked>
+			</div>
+			<div class="layui-form-item">
+				<button type="button" class="pear-btn pear-btn-success login" lay-submit lay-filter="login">
+					登 入
+				</button>
+			</div>
+		</form>
+		<!-- 资 源 引 入 -->
+		<script src="config/config.js"></script>
+		<script src="component/layui/layui.js"></script>
+		<script src="component/ui/ui.js"></script>
+		
+		<script>
+			layui.use(['form', 'button', 'popup'], function() {
+				let form = layui.form,
+					button = layui.button,
+					popup = layui.popup,
+					$ = layui.$,
+					layer = layui.layer;
+					changeImg = () => {
+						$('#codeImage').attr('src',apiUrl + 'login/captcha?t='+ Math.random());
+					}
+				changeImg();
+				$('#codeImage').click(() => {
+					changeImg();
+				});
+				$('#captcha').on('keydown', (e) => {
+					if (e.keyCode == 13) {
+						$(".login").trigger("click");
+						return false
+					}
+				});
+                // 登 录 提 交
+				form.on('submit(login)', function(data) {
+					
+					/// 验证
+					data = data.field;
+					console.log(data);
+					if (data.username == '') {
+						layer.msg('用户名不能为空');
+						return false;
+					}
+					if (data.password == '') {
+						layer.msg('密码不能为空');
+						return false;
+					}
+					if (data.captcha == '') {
+						layer.msg('验证码不能为空');
+						return false;
+					}
+					/// 登录
+					const index = layer.load(0, {
+						time: 5 * 1000
+					}); //显示加载中动画，最多5秒自动关闭
+					let postData = {
+						password: data.password,
+						username: data.username,
+						captcha: data.captcha
+					};
+					_post(layui, 'login/do', postData, res => {
+						layer.close(index);
+						//console.log(res)
+						setToken(res);
+						
+						location.href = 'ui.html';
+					}, err => {
+						layer.close(index);
+						//console.log(err)
+						if(err.code == 201) {
+							changeImg();
+						}
+					})
+				
+					return false;
+				});
+			})
+		</script>
+	</body>
+</html>

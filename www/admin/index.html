@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <title>GoDo后台桌面管理系统</title>
+    <link href="/admin/component/layui/css/layui.css" rel="stylesheet" />
+    <link href="/admin/component/winui/css/animate.min.css" rel="stylesheet" />
+    <link href="/admin/component/winui/font/css/font-awesome.css" rel="stylesheet" />
+    <link href="/admin/component/winui/css/winui.css" rel="stylesheet" />
+    <!--link href="/admin/component/winui/css/chat.css" rel="stylesheet" /-->
+</head>
+<body>
+<!-- making a power on div and make user click a button so that we can autoplay videos -->
+    <div class="powerOnBox">
+        <div class="power-switch" id="powerOnBtn">
+            <input type="checkbox" />
+            <div class="button">
+                <svg class="power-off">
+                    <use xlink:href="#a" class="a" />
+                    <use xlink:href="#b" class="b" />
+                </svg>
+                <svg class="power-on">
+                    <use xlink:href="#a" class="a" />
+                    <use xlink:href="#b" class="b" />
+                </svg>
+            </div>
+        </div>
+        <span style="color: lavender">启动</span>
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol xmlns="http://www.w3.org/2000/svg" id="a" viewBox="0 0 150 150">
+                <path d="M75 34v24" />
+            </symbol>
+            <symbol xmlns="http://www.w3.org/2000/svg" id="b" viewBox="0 0 150 150">
+                <circle cx="75" cy="80" r="35" />
+            </symbol>
+        </svg>
+    </div>
+    <!-- Boot Elements -->
+   
+
+    <!-- EDGE BROWSER -->
+    <!-- 桌面 -->
+    <div class="winui-desktop">
+
+    </div>
+
+    <!-- 开始菜单 -->
+    <div class="winui-start sp layui-hide">
+        <!-- 左边设置 -->
+        <div class="winui-start-left" id="leftTop">
+            <!--div class="winui-start-item bottom" data-text="个人中心"><i class="layui-icon layui-icon-delete"></i></div>
+            <div class="winui-start-item bottom" data-text="个人中心"><i class="fa fa-user"></i></div-->
+            <div class="winui-start-item winui-start-individuation bottom" data-text="主题设置"><i class="fa fa-paw"></i></div>
+            <div class="winui-start-item bottom logout" data-text="注销登录"><i class="fa fa-power-off"></i></div>
+        </div>
+        <!-- 中间导航 -->
+        <div class="winui-start-center">
+            <div class="layui-side-scroll">
+                <ul class="winui-menu layui-nav layui-nav-tree" lay-filter="winuimenu"></ul>
+            </div>
+        </div>
+        <!-- 右边磁贴 -->
+        <div class="winui-start-right">
+            <div class="layui-side-scroll">
+                <div class="winui-nav-tile">
+                    <div class="winui-tilebox">
+                        <div class="winui-tilebox-head">工具</div>
+                        <div class="winui-tilebox-body" id="winui-tilebox-body">
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script id="startCenterTpl" type="text/html">
+  {{#  layui.each(d, function(index, item){ }}
+    <div class="winui-tile {{item.startcss}}" data-id="{{index}}">
+        <i class="fa fa-fw {{item.icon}}"></i>
+        <span>{{item.tips}}</span>
+    </div>
+  {{#  }); }}
+</script>
+    <!-- 任务栏 -->
+    <div class="winui-taskbar">
+        <!-- 开始菜单触发按钮 -->
+        <div class="winui-taskbar-start sp"><i class="fa fa-windows"></i></div>
+        <!-- 任务项 -->
+        <ul class="winui-taskbar-task"></ul>
+        <!-- 任务栏时间 -->
+        <div class="winui-taskbar-time"></div>
+        <!-- 控制中心 -->
+        <div class="winui-taskbar-console sp">
+            <i class="fa fa-comment-o"></i>
+        </div>
+        <!-- 显示桌面 -->
+        <div class="winui-taskbar-desktop">
+        </div>
+    </div>
+
+    <!--控制中心-->
+    <div class="winui-console layui-hide slideOutRight sp" id="winui-chatbox">
+    
+
+    </div>
+    <!--右键菜单-->
+    <div class="desktop-menu" style="display: none;">  
+        <ul> 
+            <!--li><a href="javascript:;" id="rightmenu-addfinder">新建文件夹</a></li> 
+            <li><a href="javascript:;" id="rightmenu-showdesc">显示简介</a></li--> 
+            <li><a href="javascript:;" id="rightmenu-refresh">刷新</a></li>  
+            <li><a href="javascript:;" id="rightmenu-initpos">重排桌面</a></li> 
+            <li><a href="javascript:;" id="rightmenu-showhelper">隐藏助手</a></li>
+            <li><a href="javascript:;" id="rightmenu-screen">进入全屏</a></li>  
+            <hr>  
+            <li><a href="javascript:;" id="rightmenu-changeBg">切换壁纸</a></li> 
+            <li><a href="javascript:;" id="rightmenu-lock">锁屏</a></li> 
+            <li><a href="javascript:;" id="rightmenu-loginout">注销</a></li>  
+        </ul>  
+    </div>  
+    <script src="/admin/config/config.js"></script>
+    <!--layui.js-->
+    <script src="/admin/component/layui/layui.js"></script>
+    <script src="/admin/component/winui/libs/selectable.js"></script>
+    <script src="/admin/component/winui/libs/socket.io.js"></script>
+    <script>
+        layui.config({
+            base: '/admin/component/winui/' //指定 index.js 路径
+            , version: '0.0.1'
+        }).use('index');
+    </script>
+</body>
+</html>

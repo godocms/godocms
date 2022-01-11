@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>数据管理</title>
+        <link rel="stylesheet" href="../../component/ui/css/ui.css"/>
+        <style></style>
+    </head>
+    <body class="pear-container">
+
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <table id="data-table" lay-filter="data-table"></table>
+            </div>
+        </div>
+
+        <script type="text/html" id="data-toolbar">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+                <i class="layui-icon layui-icon-add-1"></i>
+		        新增
+		    </button>
+        </script>
+
+        <script id="op-bar" type="text/html">
+            <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="delete">
+                <i class="layui-icon layui-icon-delete"></i>
+            </button>
+        </script>
+
+        <script src="../../config/config.js"></script>
+        <script src="../../component/layui/layui.js"></script>
+        <script src="../../component/ui/ui.js"></script>
+        <script>
+            layui.use([
+                'table',
+                'form',
+                'dropdown',
+                'jquery',
+                'common',
+                'soulTable'
+            ], function () {
+                let table = layui.table,
+                    form = layui.form,
+                    $ = layui.jquery,
+                    dropdown = layui.dropdown,
+                    common = layui.common,
+                    soulTable = layui.soulTable,
+                    req = _req();
+
+                let MODULE_PATH = "./";
+                //console.log(req)
+                _get(layui, 'db/fieldList?table=' + req.table, cols => {
+                    //console.log(cols);
+                    let colsFields = $.extend(true, [], cols[0]);
+                    cols[0].unshift({type : 'radio',title:'copy'})
+                    cols[0].push({title: '操作', toolbar: '#op-bar', align: 'center', width: 100, fixed: 'right'});
+                    table.render({
+                        elem: '#data-table',
+                        url: apiUrl + 'db/listData?table=' + req.table,
+                        headers: getHeader(),
+                        parseData: function (res) {
+                            console.log(res)
+                            return {
+                                "code": res.code, //解析接口状态
+                                "msg": res.message, //解析提示文本
+                                "count": res.data.count, //解析数据长度
+                                "data": res.data.list //解析数据列表
+                            };
+                        },
+                        height: $(document).height() - $('#data-table')
+                            .offset()
+                            .top - 20,
+                        done: function () {
+                            soulTable.render(this)
+                        },
+                        autoSort: true,
+                        page: true,
+                        cols: cols,
+                        skin: 'line',
+
+                        toolbar: '#data-toolbar',
+                        defaultToolbar: [
+                            {
+                                title: '刷新',
+                                layEvent: 'refresh',
+                                icon: 'layui-icon-refresh'
+                            },
+                            'filter',
+                            'print',
+                            'exports'
+                        ]
+                    });
+                    table.on('edit(data-table)', function (obj) {
+                        //console.log(obj)
+                        let old = $(this)
+                            .prev()
+                            .text();
+                        //console.log(old)
+
+                        let update = {
+                            table: req.table,
+                            data: JSON.stringify(obj.data),
+                            field: obj.field,
+                            value: obj.value,
+                            old
+                        }
+
+                        _post(layui, 'db/editData', update, res => {
+                            layer.msg('更新成功', {
+                                icon: 1,
+                                time: 1000
+                            });
+                        }, err => {
+                            //console.log(err)
+
+                        })
+                    });
+                    table.on('tool(data-table)', function (obj) {
+                        //window[obj.event](obj.data);
+                        //console.log(obj)
+                        //console.log(obj.data)
+                        if (obj.event === 'delete') {
+                            window.delete(obj)
+                        }
+                    });
+                    table.on('toolbar(data-table)', function (obj) {
+                        //window[obj.event](obj);
+                        // console.log(window)
+                        if (obj.event === 'add') {
+                            //console.log(obj)
+                            window.add();
+                        }
+                    });
+                    table.on('row(data-table)', function(obj) {
+                        //console.log(obj)
+                        let arr = [], data = obj.data;
+                        for(let p in data) {
+                            arr.push(p + '=' + data[p]);
+                        }
+                        console.log(arr)
+                        window.add(arr.join('&'))
+                    });
+                    window.add = function(data = '') {
+                        //console.log(cols)
+                        //console.log(colsFields)
+                        let fields = [];
+                        colsFields.forEach(d => {
+                            fields.push(d.field)
+                        });
+                        layer.open({
+                            type: 2,
+                            title: '添加数据',
+                            shade: 0.1,
+                            offset: 'rt',
+                            area: ['90%', '100%'],
+                            anim: 1,
+                            content: MODULE_PATH + 'data-add.html?_table=' + req.table + '&_fields=' + fields.join(',') + '&' + data
+                        });
+                        /*
+                        let cache = table.cache['data-table'], data = {};
+                        //console.log(cache)
+                        cols[0].forEach(d => {
+                            data[d.field] = '';
+                        })
+                        //console.log(data);
+                        cache.unshift(data);
+                        //console.log(cache);
+                        table.reload("data-table", {
+                            url: null,
+                            data: cache
+                        })*/
+                        //console.log(data)
+
+                    }
+                    window.delete = function (obj) {
+                        console.log(obj)
+                        layer.confirm('确定要删除该条数据吗？', {
+                            icon: 3,
+                            title: '提示'
+                        }, function (index) {
+                            layer.close(index);
+                            _post(layui, 'db/delData', {
+                                table: req.table,
+                                data: JSON.stringify(obj.data)
+                            }, res => {
+                                layer.msg('删除成功', {
+                                    icon: 1,
+                                    time: 1000
+                                }, () => {
+                                    obj.del();
+                                });
+                            }, err => {
+                                //layer.msg('删除失败',{icon:2,time:1000});
+                            })
+                        });
+                    }
+                    window.refresh = function (param) {
+                        table.reload('data-table');
+                    }
+                })
+
+            })
+        </script>
+    </body>
+</html>

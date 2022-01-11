@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>拓扑图编辑器</title>
+    <link rel="stylesheet" href="common/css/global.css"/>
+    <link rel="stylesheet" href="common/color-picker/color-picker.css"/>
+    <link rel="stylesheet" href="common/popup/popup.css"/>
+    <link rel="stylesheet" href="common/modal/dialog.css"/>
+    <link rel="stylesheet" href="app.css"/>
+</head>
+<body style="margin: 0px">
+<div id="app">
+    <template id="editor-template">
+        <link rel="stylesheet" href="common/property/form.css"/>
+        <link rel="stylesheet" href="common/property/property.css"/>
+<!--        <link rel="stylesheet" href="common/color-picker/color-picker.css"/>-->
+        <link rel="stylesheet" href="common/toolbox/toolbox.css"/>
+        <link rel="stylesheet" href="common/toolbar/toolbar.css"/>
+<!--        <link rel="stylesheet" href="common/popup/popup.css"/>-->
+<!--        <link rel="stylesheet" href="common/modal/dialog.css"/>-->
+        <link rel="stylesheet" href="common/vue/graph.editor.css"/>
+        <div ref="toolbar_pane" class="toolbar">
+            <div ref="toolbar" style="display: inline-block;"></div>
+        </div>
+        <div style="display: flex; width: 100%; flex: 1 1 auto; overflow: hidden;">
+            <div ref="toolbox" class="toolbox" style="flex: 1 0 200px;"></div>
+            <div style="position: relative; flex: 10 1 500px;">
+                <div ref="canvas" style="width: 100%; height: 100%;"></div>
+                <div ref="overview"
+                     style="background-color: rgba(255, 255, 255, 0.8); position: absolute; right: 0px; top: 0px; width: 200px; height: 150px; margin: 10px;"></div>
+                <div ref="property" class="property q-property-pane"></div>
+                <div ref="json_pane" class="json-pane" style="display: none;">
+                    <textarea ref="json_textarea" spellcheck="false"></textarea>
+                    <div ref="json_btn_group" class="btn-group" style="position: absolute; top: 5px; right: 20px;">
+                        <div class="btn" @click="exportJSON">Update</div>
+                        <div class="btn" @click="submitJSON">Submit</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <div class="q-graph-editor" id="editor"></div>
+    <script src="/admin/component/ui/winmsg.js"></script>
+    <script src="/admin/config/config.js"></script>
+    <script type="module">
+        import {Editor} from "./graph.editor.js?";
+        import {initDemo,fromJson} from "./js/main.js";
+
+        let editor = new Editor('editor', {template: 'editor-template'});
+        //initDemo(editor, 'data/topo2.json');
+        if (!_ProId) {
+            fromJson(editor);
+        }else{
+            __get('flow/editBefore?id=' + _ProId, res => {
+                //console.log(res)
+                if(res.code == 0) {
+                    window._ProTitle = res.data.title;
+                    //console.log(JSON.parse(res.data.content))
+                    fromJson(editor, JSON.parse(res.data.content));
+                }else{
+                    //_msg('数据异常')
+                }
+                
+            })
+        }
+        
+    </script>
+</div>
+</body>
+</html>

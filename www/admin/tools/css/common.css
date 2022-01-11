@@ -1,0 +1,8 @@
+@media (max-width: 600px) {
+    body {min-width:600px;}
+}
+
+#header {border-bottom:1px solid #f7f7f7;margin-bottom:10px;}
+.select,.select2-drop,.multiselect {min-width: 50px;}
+#sandbox {position:absolute;left:-9999px;top:-9999px;width:0;height:0;}
+.btn-alimama{margin-bottom:10px;}

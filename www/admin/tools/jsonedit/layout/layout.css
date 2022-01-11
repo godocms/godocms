@@ -1,0 +1,418 @@
+html {
+	overflow: hidden;
+}
+
+body {
+	margin: 0;
+}
+
+#top-bar {
+	display: inline-block;
+	border-bottom: 1px;
+	padding-bottom: 10px;
+	padding-top: 8px;
+	padding-left: 8px;
+	top: 0;
+	width: 100vw;
+	min-height: 1.6em;
+	font-size: 1.2em;
+	vertical-align: middle;
+	box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.19), 0 6px 6px -6px rgba(0, 0, 0, 0.23);
+}
+
+.bar-items {
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
+button {
+	border: none;
+	background-color: transparent;
+	color: #2F2F2F;
+	vertical-align: middle;
+}
+
+button:hover {
+	color: #2F2F2F;
+	background-color: #DDDDDD;
+}
+
+button:active {
+	background-color: #CCCCCC;
+}
+
+.menu-items {
+	padding: 5px;
+	color: #2F2F2F;
+	cursor: default;
+}
+
+.menu-items:hover {
+	color: #2F2F2F;
+	background-color: #DDDDDD;
+}
+
+#top-bar ul li {
+	position: relative;
+	float: left;
+	margin: 0;
+	padding: 0
+}
+
+#top-bar ul {
+	list-style: none;
+	position: relative;
+	float: left;
+	margin: 0;
+	padding: 0
+}
+
+.type-icon {
+	margin: 0 0.25em;
+	padding: 0;
+	vertical-align: top;
+	text-align: center;
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.type-icon-array {
+	background-image: url('../img/array-s.png');
+}
+
+.type-icon-object {
+	background-image: url('../img/object-s.png');
+}
+
+.type-icon-number {
+	background-image: url('../img/number-s.png');
+}
+
+.type-icon-bool {
+	background-image: url('../img/bool-s.png');
+}
+
+.type-icon-string {
+	background-image: url('../img/string-s.png');
+}
+
+.menu {
+	list-style: none;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+#top-bar ul ul li {
+	float: none;
+	width: 170px;
+	padding: 8px;
+}
+
+#top-bar ul ul {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	background: #FFFFFF;
+	padding: 0
+}
+
+#top-bar li:hover > ul {
+	display: block;
+	border: 1px #E0E0E0;
+	border-top: none;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+#setting-button {
+	position: absolute;
+	right: 8px;
+}
+
+button:focus {
+	outline: none;
+}
+
+#save-json-button, #edit-button {
+	visibility: hidden;
+}
+
+main {
+	display: flex;
+	height: 95vh;
+}
+
+button {
+	text-align: center;
+	padding: 5px 1.5rem;
+}
+
+button, input {
+	font-size: 1em;
+}
+
+input:focus {
+	outline: none;
+}
+
+#browser {
+	visibility: hidden;
+	float: left;
+	width: 18%;
+	min-width: 400px;
+	border-right: 1px;
+	height: 100%;
+	overflow: auto;
+	text-align: center;
+	box-shadow: 3px 0 6px -3px rgba(0, 0, 0, 0.16), 3px 0 6px -3px rgba(0, 0, 0, 0.23);
+
+}
+
+#browser input {
+	border: none;
+	border-bottom: 1px solid #757575;
+}
+
+#searchbox {
+	width: 80%;
+	margin-bottom: 10px;
+	margin-top: 10px;
+
+}
+
+#tree {
+	background-color: white;
+	width: 80%;
+	height: 90%;
+	margin: auto;
+	padding: 5px;
+	text-align: left;
+	overflow: auto;
+	font-size: 16px;
+}
+
+.tree-icon {
+	margin: 0;
+	vertical-align: center;
+}
+
+.tree-label {
+	max-height: 1em;
+	user-select: none;
+	cursor: pointer;
+}
+
+.tree-label-selected {
+	background-color: #003182;
+	color: white;
+}
+
+.tree-node-list {
+	display: none;
+	list-style-type: none;
+	margin-left: 0.5em;
+	padding-left: 1em;
+	border-left: #CFCFCF solid 1px;
+}
+
+.caret {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	text-align: center;
+}
+
+.active-tree {
+	display: block;
+}
+
+#editor {
+	display: inline-block;
+	width: 82%;
+	min-width: 400px;
+	height: 100%;
+	float: right;
+	overflow: auto;
+}
+
+#editor-content {
+	display: table;
+	width: 80%;
+	border-collapse: collapse;
+	margin: 20px auto 30px;
+}
+
+.table-row {
+	display: table-row;
+	border-bottom: #B4B4B4 ridge 1px;
+	white-space: nowrap;
+}
+
+.table-cell {
+	display: table-cell;
+	vertical-align: middle;
+	margin: 5px;
+}
+
+textarea {
+	width: 65%;
+
+}
+
+.table-row textarea {
+	min-width: 195px;
+	white-space: nowrap;
+
+}
+
+#save-btn {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	display: block;
+}
+
+.raised-button:hover {
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+	background-color: #008274;
+	color: white;
+}
+
+.raised-button {
+	background-color: #009587;
+	color: white;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+}
+
+.new {
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+	height: 100%;
+}
+
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.3); /* Black w/ opacity */
+}
+
+.modal-content {
+	z-index: 1000;
+	display: block;
+	width: 60vw;
+	background-color: white;
+	margin: auto;
+	margin-top: 10%;
+	padding: 30px;
+	box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+	border-radius: 2px;
+}
+
+.modal-content-small {
+	z-index: 1000;
+	display: block;
+	width: 20vw;
+	background-color: white;
+	margin: auto;
+	margin-top: 10%;
+	padding: 30px;
+	box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+	border-radius: 2px;
+}
+
+.string-input {
+	width: 100%;
+	height: 100px;
+}
+
+.description {
+	color: #999999;
+	font-size: 0.7em;
+	padding-left: 20px;
+	margin-top: 2px;
+}
+
+#new-option {
+	display: none;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 0;
+	margin-top: 0;
+	z-index: 20;
+
+}
+
+footer a {
+	color: #999999;
+	text-decoration: none;
+}
+
+footer {
+	position: fixed;
+	bottom: 5px;
+	height: 10px;
+	right: 5px;
+	/*box-shadow: 0 -5px 5px -5px rgba(0,0,0,0.16), 0 -5px 5px -5px rgba(0,0,0,0.23);*/
+	font-size: 0.9em;
+	padding: 5px;
+	margin: auto;
+	color: #999999;
+	background-color: transparent;
+}
+
+@media only screen and (max-width: 750px) {
+	#editor, #browser {
+		float: none;
+		display: block;
+		width: 100vw;
+	}
+
+	main {
+		flex-direction: column;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+
+	#top-bar {
+		padding-right: 125px;
+		width: 100%;
+	}
+
+	#tree {
+		width: 100%;
+
+	}
+
+	#editor-content {
+		width: 100%;
+	}
+
+	#searchbox {
+		width: 100%;
+	}
+
+	.table-row {
+		white-space: normal;
+	}
+
+	.modal-content-small {
+		width: 60vw;
+	}
+
+}

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" value="notranslate">
+  <title>代码</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/admin/component/ui/css/ui.css" />
+  <!--script src="/admin/code/js/blockly_compressed.js"></script>
+  <script src="/admin/code/js/blocks_compressed.js"></script-->
+  <script src="/admin/code/js/blockly_uncompressed.js"></script>
+  <script src="/admin/code/js/blocks/colour.js"></script>
+  <script src="/admin/code/js/blocks/lists.js"></script>
+  <script src="/admin/code/js/blocks/logic.js"></script>
+  <script src="/admin/code/js/blocks/loops.js"></script>
+  <script src="/admin/code/js/blocks/math.js"></script>
+  <script src="/admin/code/js/blocks/procedures.js"></script>
+  <script src="/admin/code/js/blocks/text.js"></script>
+  <script src="/admin/code/js/blocks/variables.js"></script>
+  
+  <!--script src="/admin/code/js/javascript_compressed.js"></script-->
+  <script src="/admin/code/js/javascript.js"></script>
+  <script src="/admin/code/js/javascript/colour.js"></script>
+  <script src="/admin/code/js/javascript/lists.js"></script>
+  <script src="/admin/code/js/javascript/logic.js"></script>
+  <script src="/admin/code/js/javascript/loops.js"></script>
+  <script src="/admin/code/js/javascript/math.js"></script>
+  <script src="/admin/code/js/javascript/procedures.js"></script>
+  <script src="/admin/code/js/javascript/text.js"></script>
+  <script src="/admin/code/js/javascript/variables.js"></script>
+  <script src="/admin/code/js/javascript/variables_dynamic.js"></script>
+  <script src="/admin/code/js/run_prettify.js"></script>
+  <script src="/admin/code/js/custom-dialog.js"></script>
+  <script src="/admin/code/code.js"></script>
+  <script src="/admin/code/defined_txt.js"></script>
+  <script src="/admin/code/defined_sql.js"></script>
+  <script src="/admin/code/defined_block.js"></script>
+  <script src="/admin/code/defined_logic.js"></script>
+  <script src="/admin/code/defined_obj.js"></script>
+  <script src="/admin/code/defined_class.js"></script>
+  <script src="/admin/code/defined.js"></script>
+
+</head>
+<body>
+  <table width="100%" height="100%">
+    
+    <tr>
+      <td colspan=2>
+        <table width="100%">
+          <tr id="tabRow" height="1em">
+            <td id="tab_blocks" class="tabon">...</td>
+            <td class="tabmin tab_collapse">&nbsp;</td>
+            <td id="tab_javascript" class="taboff tab_collapse">code</td>
+            <!--td class="tabmin tab_collapse">&nbsp;</td>
+            <td id="tab_xml" class="taboff tab_collapse">xml</td-->
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_code" class="taboff">
+              <select id="code_menu"></select>
+            </td>
+            <td class="tabmax">
+              <button class="layui-btn layui-btn-primary layui-border-orange layui-btn-xs demobtn">
+                <i class="layui-icon layui-icon-down layui-font-12"></i>
+                用例
+              </button>
+              <button  id="trashButton" class="layui-btn layui-btn-primary layui-border-red layui-btn-xs">
+                <i class="layui-icon layui-icon-delete layui-font-12"></i>
+                清空
+              </button>
+              <button  id="linkButton" class="layui-btn layui-btn-primary layui-border-black layui-btn-xs">
+                <i class="layui-icon layui-icon-tabs layui-font-12"></i>
+                保存
+              </button>
+              <!--button id="trashButton" class="notext" title="...">
+                <img src='/admin/code/media/1x1.gif' class="trash icon21">
+              </button-->
+              <!--button id="linkButton" class="notext" title="...">
+                <img src='/admin/code/media/1x1.gif' class="link icon21">
+              </button-->
+              <!--button id="runButton" class="notext primary" title="...">
+                <img src='/admin/code/media/1x1.gif' class="run icon21">
+              </button-->
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td height="99%" colspan=2 id="content_area">
+      </td>
+    </tr>
+  </table>
+  <div id="content_blocks" class="content"></div>
+  <pre id="content_javascript" class="content prettyprint lang-js"></pre>
+  <textarea id="content_xml" class="content" wrap="off"></textarea>
+
+  <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+   <category name="语句" colour="%{BKY_PROCEDURES_HUE}">
+    <block type="gd_var"></block>
+    <block type="text"></block>
+    
+    <block type="gd_inline"></block>
+    <block type="gd_text"></block>
+    <block type="gd_plain"></block>
+    <block type="gd_val"></block>
+    <block type="gd_abc"></block>
+    <block type="gd_lets"></block>
+    <block type="gd_new"></block>
+    <block type="gd_require"></block>
+    <block type="gd_console"></block>
+    <block type="gd_true"></block>
+    <block type="gd_false"></block>
+    <block type="create_obj"></block>
+    <block type="lists_create_with"></block>
+    
+   </category>
+   <category name="内部" colour="%{BKY_PROCEDURES_HUE}">
+    <block type="gd_post"></block>
+    <block type="gd_get"></block>
+    <block type="gd_file"></block>
+    <block type="gd_isempty"></block>
+    <block type="gd_success"></block>
+    <block type="gd_fail"></block>
+    <block type="gd_service"></block>
+    <block type="gd_chmod"></block>
+    <block type="gd_md5"></block>
+    <block type="gd_ip"></block>
+    <block type="gd_datetime"></block>
+    
+    <block type="gd_return"></block>
+   </category>
+   <category name="语块" colour="%{BKY_PROCEDURES_HUE}">
+    <block type="gd_foreach"></block>
+    <block type="gd_findall"></block>
+    <block type="gd_function"></block>
+    <block type="gd_try_catch"></block>
+    
+    <block type="gd_class"></block>
+    <block type="gd_classmethod"></block>
+    <block type="gd_constructor"></block>
+    
+   </category>
+  <category name="数据" colour="%{BKY_PROCEDURES_HUE}">
+    <block type="gd_await"></block>
+    <block type="gd_awaits"></block>
+    <block type="gd_model"></block>
+    <block type="gd_where"></block>
+    <block type="gd_select"></block>
+    <block type="gd_find"></block>
+    <block type="gd_add"></block>
+    <block type="gd_addmany"></block>
+    <block type="gd_update"></block>
+    <block type="gd_delete"></block>
+    <block type="gd_query"></block>
+    <block type="gd_startTrans"></block>
+    
+   </category>
+   <category name="%{BKY_CATLOGIC}" colour="%{BKY_LOGIC_HUE}">
+      
+      <block type="controls_if"></block>
+      <block type="controls_switch"></block>
+      <block type="controls_switch_break"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+      <block type="logic_null"></block>
+      <block type="logic_ternary"></block>
+    </category>
+
+    <category name="%{BKY_CATLISTS}" colour="%{BKY_LISTS_HUE}">
+      <block type="lists_create_with">
+        <mutation items="0"></mutation>
+      </block>
+      
+      <block type="lists_repeat">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">5</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="lists_length"></block>
+      <block type="lists_isEmpty"></block>
+      <block type="lists_indexOf">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">{listVariable}</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_getIndex">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">{listVariable}</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_setIndex">
+        <value name="LIST">
+          <block type="variables_get">
+            <field name="VAR">{listVariable}</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_getSublist">
+        <value name="LIST">
+          <block type="variables_get">
+            <field name="VAR">{listVariable}</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_split">
+        <value name="DELIM">
+          <shadow type="text">
+            <field name="TEXT">,</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="lists_sort"></block>
+      
+    </category>
+   
+
+    
+    <category name="%{BKY_CATLOOPS}" colour="%{BKY_LOOPS_HUE}">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+      <block type="controls_for">
+        <value name="FROM">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="TO">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+        <value name="BY">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="controls_forEach"></block>
+      <block type="controls_flow_statements"></block>
+    </category>
+    <category name="%{BKY_CATMATH}" colour="%{BKY_MATH_HUE}">
+      <block type="math_number">
+        <field name="NUM">123</field>
+      </block>
+      <block type="math_arithmetic">
+        <value name="A">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="B">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_single">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">9</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_trig">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">45</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_constant"></block>
+      <block type="math_number_property">
+        <value name="NUMBER_TO_CHECK">
+          <shadow type="math_number">
+            <field name="NUM">0</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_round">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">3.1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_on_list"></block>
+      <block type="math_modulo">
+        <value name="DIVIDEND">
+          <shadow type="math_number">
+            <field name="NUM">64</field>
+          </shadow>
+        </value>
+        <value name="DIVISOR">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_constrain">
+        <value name="VALUE">
+          <shadow type="math_number">
+            <field name="NUM">50</field>
+          </shadow>
+        </value>
+        <value name="LOW">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="HIGH">
+          <shadow type="math_number">
+            <field name="NUM">100</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_random_int">
+        <value name="FROM">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="TO">
+          <shadow type="math_number">
+            <field name="NUM">100</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_random_float"></block>
+      <block type="math_atan2">
+        <value name="X">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="Y">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+    </category>
+    <category name="%{BKY_CATTEXT}" colour="%{BKY_TEXTS_HUE}">
+      
+      <block type="text_join"></block>
+      <block type="text_append">
+        <value name="TEXT">
+          <shadow type="text"></shadow>
+        </value>
+      </block>
+      <block type="text_length">
+        <value name="VALUE">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_isEmpty">
+        <value name="VALUE">
+          <shadow type="text">
+            <field name="TEXT"></field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_indexOf">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">{textVariable}</field>
+          </block>
+        </value>
+        <value name="FIND">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_charAt">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">{textVariable}</field>
+          </block>
+        </value>
+      </block>
+      <block type="text_getSubstring">
+        <value name="STRING">
+          <block type="variables_get">
+            <field name="VAR">{textVariable}</field>
+          </block>
+        </value>
+      </block>
+      <block type="text_changeCase">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_trim">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_print">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_prompt_ext">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+    </category>
+    
+    <sep></sep>
+    <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE">
+      <!--block type="gd_var"></block-->
+    </category>
+    <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
+
+    <sep></sep>
+   
+  </xml>
+<script src="/admin/config/config.js"></script>
+<script src="/admin/component/layui/layui.js"></script>
+<script src="/admin/code/opcode.js"></script>
+</body>
+</html>
+

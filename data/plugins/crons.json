@@ -1,0 +1,9 @@
+{
+    "key": "godo-crons",
+    "url" : "crons",
+    "path": "godo-crons",
+    "isTest": true,
+    "type": "sys",
+    "name": "计划任务",
+    "sql": "src/data/data.sql"
+}

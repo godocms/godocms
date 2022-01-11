@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<template id="my-template">
+    <style>
+        .q-label{
+            background-color: #F00;
+        }
+    </style>
+    <span class="q-label">模板</span>
+</template>
+<script>
+    customElements.define('q-div',
+        class extends HTMLElement {
+            constructor() {
+                super();
+                let template = document.getElementById('my-template');
+                let templateContent = template.content;
+                const shadowRoot = this.attachShadow({mode: 'open'});
+                shadowRoot.appendChild(templateContent.cloneNode(true));
+            }
+        })
+</script>
+<q-div></q-div>
+</body>
+</html>

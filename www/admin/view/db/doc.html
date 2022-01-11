@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>数据库文档</title>
+        <link rel="stylesheet" href="../../component/ui/css/ui.css"/>
+        <style type="text/css">
+            html {
+                font-family: sans-serif;
+                -ms-text-size-adjust: 100%;
+                -webkit-text-size-adjust: 100%;
+            }
+
+            body {
+                padding: 20px;
+            }
+            table {
+                margin: 20px;
+                border-collapse: collapse;
+                border-spacing: 0;
+                empty-cells: show;
+                border: 1px solid #cbcbcb;
+            }
+
+            td,
+            th {
+                padding: 0;
+            }
+
+            table td,
+            table th {
+                border-left: 1px solid #cbcbcb;
+                border-width: 0 0 0 1px;
+                font-size: inherit;
+                margin: 0;
+                overflow: visible;
+                padding: 0.5em 1em;
+            }
+
+            table thead {
+                background-color: #e0e0e0;
+                color: #000;
+                text-align: left;
+                vertical-align: bottom;
+            }
+
+            table tbody tr:nth-child(odd) {
+                background-color: transparent;
+            }
+
+            table tbody tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+            pre {
+                background-color: #f2f2f2;
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body class="pear-container">
+        <div class="pear-row" style="text-align:right">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" id="downpdf">
+                <i class="layui-icon ayui-icon-download-circle"></i>
+                    下载PDF
+            </button>
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" id="downword">
+                <i class="layui-icon ayui-icon-download-circle"></i>
+                    下载WORD
+            </button>
+        </div>
+        <div class="layui-card">
+
+            <div class="layui-card-body">
+                <div id="content"></div>
+            </div>
+        </div>
+        <script src="../../config/config.js"></script>
+        <script src="../../component/layui/layui.js"></script>
+        <script src="../../component/ui/ui.js"></script>
+        <script src="/static/docs/js/marked.min.js"></script>
+        <script src="/static/docs/js/html2pdf.js"></script>
+
+        <script>
+            layui.use([
+                'table', 'jquery', 'common', 'FileSaver', 'wordexport','layer'
+            ], function () {
+                let table = layui.table;
+                let $ = layui.jquery;
+                let common = layui.common,
+                    FileSaver = layui.FileSaver,
+                    wordexport = layui.wordexport,
+                    layer = layui.layer;
+
+                let MODULE_PATH = "./";
+                _get(layui, 'db/doc', res => {
+                    //console.log(res)
+                    $('#content').html(marked.parse(res));
+                    $("#downpdf").click(function (e) {
+                        //console.log(e)
+                        if(navigator.userAgent.indexOf("Firefox") > -1){
+                            layer.msg('请改用谷歌浏览器，暂不支持火狐', {icon : 2});
+                            return;
+                        }
+                        var element = document.getElementById('content');
+                        //let div = 
+                        layer.load(2, {time: 3*1000});
+                        html2pdf()
+                            .set({filename:'数据库设计文档.pdf'})
+                            .from(element)
+                            .save()
+                        
+
+                    })
+                    $('#downword').click(e => {
+                        $("#content").wordExport("数据库设计文档");
+                    })
+                })
+            })
+        </script>
+    </body>
+</html>

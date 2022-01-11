@@ -1,0 +1,224 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <block type="gd_class" id="Z*{ruYW)N@e4i4Td.Tgo" x="162" y="-363">
+    <field name="className">apitest</field>
+    <field name="extendsName"></field>
+    <field name="var_type">Base</field>
+    <statement name="chain">
+      <block type="gd_classmethod" id=".b]f{^Rv=ks$hbgAe.|m">
+        <field name="methodName">async listAction</field>
+        <field name="params"></field>
+        <comment pinned="false" h="80" w="160">列表函数</comment>
+        <statement name="chains">
+          <block type="gd_lets" id="^:y(#gy_bY?(v.|i?mMH">
+            <field name="var_type">let</field>
+            <field name="letsname">this.get()</field>
+            <statement name="chain">
+              <block type="gd_plain" id="A!@SJ;{]:=A:/+(LOd%9">
+                <field name="var">page</field>
+                <next>
+                  <block type="gd_plain" id="9`i9FBwkXk)=~T![rK,2">
+                    <field name="var">limit</field>
+                    <next>
+                      <block type="gd_plain" id="HkhuQnCL;8wXMKD=Lv~t">
+                        <field name="var">param</field>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </statement>
+            <next>
+              <block type="gd_var" id="RX)ZT3wm~ma_B_/pV9wk">
+                <field name="var_type">let</field>
+                <field name="var">wsql</field>
+                <value name="val">
+                  <block type="gd_inline" id="8Q-g#XEjxa`r`L.7+k~x">
+                    <field name="var">{}</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="controls_if" id="oH8i?De{Nd|Q8?Qtv-b)">
+                    <value name="IF0">
+                      <block type="gd_inline" id="PNa@s@jwAN*0,+}Wk7k0">
+                        <field name="var">param</field>
+                      </block>
+                    </value>
+                    <statement name="DO0">
+                      <block type="gd_val" id="y@Rr8rtTf{6jo2p?gUag">
+                        <field name="var1">wsql</field>
+                        <field name="var2">this.parseSearch(param,wsql)</field>
+                      </block>
+                    </statement>
+                    <next>
+                      <block type="gd_var" id="QaDzZ^.}rM4cIYfHJo}2">
+                        <field name="var_type">let</field>
+                        <field name="var">list</field>
+                        <value name="val">
+                          <block type="gd_await" id="k^H)L(.mRv`F%vK`a1n|">
+                            <value name="val">
+                              <block type="gd_model" id="B*G`3dClllHY+g00}:O7">
+                                <field name="var">api_test</field>
+                                <value name="val">
+                                  <block type="gd_where" id="$*uv=r5bLLhd:pa)Q~_Z">
+                                    <field name="var_type">where</field>
+                                    <field name="var">wsql</field>
+                                    <value name="val">
+                                      <block type="gd_where" id="77;Ab%q(Mn}yo^;z!)~y">
+                                        <field name="var_type">page</field>
+                                        <field name="var">page,limit</field>
+                                        <value name="val">
+                                          <block type="gd_where" id="(i4R)[g#[bv!EEO+pnT1">
+                                            <field name="var_type">order</field>
+                                            <field name="var">'id desc'</field>
+                                            <value name="val">
+                                              <block type="gd_select" id="m}rcIpQr2]WEzR4.S@By"></block>
+                                            </value>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="gd_var" id="*7XR??r+EQ-wcKWnV/8Q">
+                            <field name="var_type">let</field>
+                            <field name="var">count</field>
+                            <value name="val">
+                              <block type="gd_await" id="[!DNNOK#~A^57Jm:wvtL">
+                                <value name="val">
+                                  <block type="gd_model" id="zM?Wqs0u^V/OBiYJF=AX">
+                                    <field name="var">api_test</field>
+                                    <value name="val">
+                                      <block type="gd_where" id="}cgV`t:=hddW=*CG^nUu">
+                                        <field name="var_type">where</field>
+                                        <field name="var">wsql</field>
+                                        <value name="val">
+                                          <block type="gd_query" id="lC7TQ018PK!)-c=ttq2-">
+                                            <field name="var_type">count</field>
+                                            <field name="var"></field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="gd_success" id="YraA5u$fx01x)z;L!9T?">
+                                <field name="var">{list,count}</field>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <next>
+          <block type="gd_classmethod" id="7eV)y;$zIp(qk{}}^Yl]">
+            <field name="methodName">async addBeforeAction</field>
+            <field name="params"></field>
+            <next>
+              <block type="gd_classmethod" id="N^[qFF!#]C/jOCm(6(LH">
+                <field name="methodName">async addAction</field>
+                <field name="params"></field>
+                <comment pinned="false" h="80" w="160">添加函数</comment>
+                <statement name="chains">
+                  <block type="gd_var" id="+(^62!FiD:k0C+%aXz(*">
+                    <field name="var_type">let</field>
+                    <field name="var">post</field>
+                    <value name="val">
+                      <block type="gd_post" id="MY=nIcUl/[H^(lnza/h!">
+                        <field name="var"></field>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="gd_var" id="~X:6@+)Vq`k#?VZrYo8C">
+                        <field name="var_type">let</field>
+                        <field name="var">has</field>
+                        <value name="val">
+                          <block type="gd_await" id="-@]pD-Dz*#8s[!V-)Y),">
+                            <value name="val">
+                              <block type="gd_model" id="uFi@/t8Z`uSQ%3;.6CB`">
+                                <field name="var">api_test</field>
+                                <value name="val">
+                                  <block type="gd_where" id="%P3K%x|k9rd/yh1kwx/o">
+                                    <field name="var_type">where</field>
+                                    <field name="var">{id : post.id}</field>
+                                    <value name="val">
+                                      <block type="gd_find" id="*@n;{u*_XsF9pvNL%LLJ"></block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="controls_if" id="23d-}D@s@Q-9fG;5D~B`">
+                            <value name="IF0">
+                              <block type="gd_isempty" id="-`Lw9:lR{R;nn50DHzVd">
+                                <field name="var_type">isEmpty</field>
+                                <field name="var">has</field>
+                              </block>
+                            </value>
+                            <statement name="DO0">
+                              <block type="gd_fail" id="P1kOk9Fos!0@Eq(T,)@t">
+                                <field name="var">数据为空</field>
+                              </block>
+                            </statement>
+                            <next>
+                              <block type="gd_awaits" id="9w(7*N#ZRjvJ6;FJWiv@">
+                                <value name="val">
+                                  <block type="gd_model" id="fY6|gTCUYksYDlS(^1_*">
+                                    <field name="var">api_test</field>
+                                    <value name="val">
+                                      <block type="gd_add" id="?`,T5d851@mDeG*dRw*f">
+                                        <field name="var_type">add</field>
+                                        <field name="var">post</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                                <next>
+                                  <block type="gd_success" id="BR{k6kgNfS7+64lwAY|Y">
+                                    <field name="var"></field>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </statement>
+                <next>
+                  <block type="gd_classmethod" id="q0u|i)a^vuBJbx0K:5J}">
+                    <field name="methodName">async editAction</field>
+                    <field name="params"></field>
+                    <next>
+                      <block type="gd_classmethod" id="Lj]FAABGDtA#(Pa66yb]">
+                        <field name="methodName">async editBeforeAction</field>
+                        <field name="params"></field>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+</xml>

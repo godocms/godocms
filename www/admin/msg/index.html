@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>聊天</title>
+    <link rel="stylesheet" href="css/amazeui.min.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+    <style>
+        .no-read {
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background-color: #f00;
+            position: absolute;
+            left: 40px;
+            top: 4px;
+            color: #fff;
+            text-align: center;
+            line-height: 17px;
+            display: none;
+        }
+
+        .am-popover {
+            color: #666;
+            border: 1px solid #dddddd;
+        }
+
+        .am-popover-inner {
+            background: #fff !important;
+            font-size: 12px;
+        }
+
+        .am-popover-caret {
+            border-bottom-color: #fff;
+        }
+
+        /*设置弹出框的遮罩*/
+        .am-dimmer {
+            z-index: 0;
+            background-color: rgba(0, 0, 0, .6);
+        }
+
+        .am-modal-dialog {
+            background: #fff;
+        }
+
+        .user_list li {
+            position: relative;
+        }
+
+        .collection-msg img {
+            max-width: 50%;
+        }
+
+        img {
+            vertical-align: inherit;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="wechat">
+
+        <div class="sidestrip">
+            <div class="am-dropdown" data-am-dropdown>
+                <!--头像插件-->
+                <div class="own_head am-dropdown-toggle"
+                     style="background: url(<?php echo $user['head_img'] ?>);cursor: pointer;"></div>
+                <div class="am-dropdown-content">
+                    <div class="own_head_top">
+                        <div class="own_head_top_text">
+                            <p class="own_name">用户名<img
+                                        src="images/icon/head.png" alt=""/></p>
+                            <p class="own_numb">ID：userid</p>
+                        </div>
+                        <img src="images/head/1.jpg" >
+                    </div>
+                    <div class="own_head_bottom">
+                        <p><span>地区</span>XX省 XX市</p>
+                        <div class="own_head_bottom_img">
+                            <a href="#"><img src="images/icon/head_1.png"/></a>
+                            <a href="#"><img src="images/icon/head_2.png"/></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--三图标-->
+            <div class="sidestrip_icon">
+                <a id="si_1"
+                   style="background: url(images/icon/head_2_1.png) no-repeat;"></a>
+                <a id="si_2" style="position: relative">
+                    <span id="no-ok-friend" class="no-read" style="left: 15px;top: -2px;"></span>
+                </a>
+                <a id="si_3"></a>
+            </div>
+
+            <!--底部扩展键-->
+            <div id="doc-dropdown-justify-js">
+                <div class="am-dropdown" id="doc-dropdown-js" style="position: initial;">
+                    <div class="sidestrip_bc am-dropdown-toggle"></div>
+                    <ul class="am-dropdown-content" style="">
+                        <li>
+                            <a href="#"
+                               data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 400, height: 225}">意见反馈</a>
+                            <div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-1">
+                                <div class="am-modal-dialog">
+                                    <div class="am-modal-hd">Modal 标题
+                                        <a href="javascript: void(0)" class="am-close am-close-spin"
+                                           data-am-modal-close>&times;</a>
+                                    </div>
+                                    <div class="am-modal-bd">
+                                        Modal 内容。本 Modal 无法通过遮罩层关闭。
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <!--                        <li><a href="#">备份与恢复</a></li>-->
+                        <li onclick="logout()"><a href="javascript:;">退出</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!--聊天列表-->
+        <div class="middle on">
+            <div class="wx_search">
+                <input type="text" placeholder="搜索"/>
+                <button title="添加朋友" onclick="addFriendOrGroup()">+</button>
+            </div>
+            <div class="office_text">
+                <ul class="user_list"></ul>
+            </div>
+        </div>
+
+        <!--好友列表-->
+        <div class="middle">
+            <div class="wx_search">
+                <input type="text" placeholder="搜索"/>
+                <button onclick="addFriendOrGroup()">+</button>
+            </div>
+            <div class="office_text" style="overflow-y: auto;">
+                <ul class="friends_list">
+                    <li onclick="getMyNewFriend()">
+                        <p>新的朋友</p>
+                        <div class="friends_box" style="position: relative;">
+                            <div class="user_head"><img src="images/newFriend.png"/>
+                            </div>
+                            <div class="friends_text">
+                                <p class="user_name">新的朋友</p>
+                            </div>
+                            <span class="no-read" style=""></span>
+                        </div>
+                    </li>
+                    <li onclick="getMyQunList()">
+                        <p>群聊</p>
+                        <div class="friends_box">
+                            <div class="user_head"><img src="
+                    images/newFriend.png"/>
+                            </div>
+                            <div class="friends_text">
+                                <p class="user_name">群聊</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--程序列表-->
+        <div class="middle">
+            <div class="wx_search">
+                <input type="text" placeholder="搜索收藏内容"/>
+                <button onclick="addFriendOrGroup()">+</button>
+            </div>
+            <div class="office_text">
+                <ul class="icon_list">
+                    <li class="icon_active">
+                        <div class="icon"><img src="images/icon/icon.png" alt=""/>
+                        </div>
+                        <span>全部收藏</span>
+                    </li>
+                    <!--                    <li>-->
+                    <!--                        <div class="icon"><img src="-->
+                    <!--static/images/icon/icon1.png" alt=""/>-->
+                    <!--                        </div>-->
+                    <!--                        <span>链接</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li>-->
+                    <!--                        <div class="icon"><img src="-->
+                    <!--static/images/icon/icon2.png" alt=""/>-->
+                    <!--                        </div>-->
+                    <!--                        <span>相册</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li>-->
+                    <!--                        <div class="icon"><img src="-->
+                    <!--static/images/icon/icon3.png" alt=""/>-->
+                    <!--                        </div>-->
+                    <!--                        <span>笔记</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li>-->
+                    <!--                        <div class="icon"><img src="-->
+                    <!--static/images/icon/icon4.png" alt=""/>-->
+                    <!--                        </div>-->
+                    <!--                        <span>文件</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li>-->
+                    <!--                        <div class="icon"><img src="-->
+                    <!--static/images/icon/icon5.png" alt=""/>-->
+                    <!--                        </div>-->
+                    <!--                        <span>音乐</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li>-->
+                    <!--                        <div class="icon"><img src="-->
+                    <!--static/images/icon/icon6.png" alt=""/>-->
+                    <!--                        </div>-->
+                    <!--                        <span>标签</span>-->
+                    <!--                    </li>-->
+                </ul>
+            </div>
+        </div>
+
+        <!--默认窗口-->
+        <div id="default-box" class="talk_window" style="display:none;">
+            <div class="windows_top">
+                <div class="windows_top_box">
+                    <ul class="window_icon">
+                        <li><a href=""><img src="images/icon/icon7.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon8.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon9.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon10.png"/></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="windows_body"></div>
+        </div>
+        <!--聊天窗口-->
+        <div id="chat-box" class="talk_window" style="display:block;">
+            <div class="windows_top">
+                <div class="windows_top_box">
+                    <span id="chat-truename"></span>
+                    <ul class="window_icon">
+                        <li><a href=""><img src="images/icon/icon7.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon8.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon9.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon10.png"/></a></li>
+                    </ul>
+                    <div class="extend" class="am-btn am-btn-success"
+                         data-am-offcanvas="{target: '#doc-oc-demo3'}"></div>
+                    <!-- 侧边栏内容 -->
+                    <div id="doc-oc-demo3" class="am-offcanvas">
+                        <div class="am-offcanvas-bar am-offcanvas-bar-flip">
+                            <div class="am-offcanvas-content">
+                                <p><a href="http://music.163.com/#/song?id=385554" target="_blank">网易音乐</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--聊天内容-->
+            <div class="windows_body">
+                <div class="office_text" style="height: 100%;">
+                    <ul class="content" id="chatbox" style="height: 100%;overflow-y: auto;">
+
+                    </ul>
+                </div>
+            </div>
+
+            <div class="windows_input" id="talkbox">
+                <div class="input_icon">
+                    <a href="javascript:;" onclick="showEmotion(event)"></a>
+                    <a href="javascript:;" onclick="chooseFolder()"></a>
+                    <a href="javascript:;" style="display:none;"></a>
+                    <a href="javascript:;" onclick="showMsgHistory()"></a>
+                    <!-- <a href="javascript:;"></a>
+                    <a href="javascript:;"></a> -->
+
+                </div>
+                <div class="input_box">
+                    <article id="input_box" onkeydown="enterSendMsg(event)" contenteditable="true"
+                             style="height: 100%;outline: none;height: calc(100% - 42px);margin-left: 28px;font-size: 16px;overflow-y: auto;"></article>
+                    <!--                                        <textarea name="" rows="" cols="" id="input_box" onkeydown="enterSendMsg(event)"></textarea>-->
+                    <input type="hidden" name="chat_id" id="chat-msg-chat_id">
+                    <button id="send" onclick="sendMessage()">发送（S）</button>
+                </div>
+            </div>
+        </div>
+        <!--群聊窗口-->
+        <div id="qun-list-box" class="talk_window" style="display:none;">
+            <div class="windows_top">
+                <div class="windows_top_box">
+                    <ul class="window_icon">
+                        <li><a href=""><img src="images/icon/icon7.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon8.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon9.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon10.png"/></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="windows_body" style="height: 100%;">
+                <div class="office_text" style="height: 100%;">
+                    <ul class="content" style="height: 100%;overflow-y: auto;">
+                        <li style="display: flex;font-size:14px;border-bottom:1px solid #e7e7e7;padding: 15px 0;align-items: center;cursor: pointer;">
+                            <div class="user_head">
+                                <div class="qun-img am-u-sm-6" style="padding:0;margin:0;height: 50%;float: left;">
+                                    <img style="width: 100%;height: 100%" src="images/head/5.jpg" alt="">
+                                </div>
+                                <div class="qun-img am-u-sm-6" style="padding:0;margin:0;height: 50%;float: left;">
+                                    <img style="width: 100%;height: 100%" src="images/head/5.jpg" alt="">
+                                </div>
+                                <div class="qun-img am-u-sm-6" style="padding:0;margin:0;height: 50%;float: left;">
+                                    <img style="width: 100%;height: 100%" src="images/head/1.jpg" alt="">
+                                </div>
+                            </div>
+                            <div class="user_text" style="flex:1;">
+                                <span class="user_name">阿光</span>
+                                <p class="user_message" style="padding:0;margin:0;line-height: initial;">qunzhu:11</p>
+                            </div>
+                            <div style="width: auto;">
+                                <button class="am-btn am-btn-xs">发消息</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--user-info窗口-->
+        <div id="user-info-box" class="talk_window" style="display:none;">
+            <div class="windows_top">
+                <div class="windows_top_box">
+                    <ul class="window_icon">
+                        <li><a href=""><img src="images/icon/icon7.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon8.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon9.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon10.png"/></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="windows_body">
+                <div class="office_text" style="height: 100%;">
+                    <ul class="content" id="chatbox" style="height: 100%;overflow-y: auto;padding: 50px 100px;">
+                        <li style="height:80px;border-bottom:1px solid #e7e7e7">
+                            <span style="font-size:22px;color:#222;">
+                                <span id="user-info-truename"></span>
+                                <img src="images/icon/head.png"
+                                     style="width: 14px;"/>
+                            </span>
+                            <img id="user-head_img" src=""
+                                 style="float:right;width:60px;height:60px;border-radius: 4px;cursor:pointer;"/>
+                        </li>
+                        <li style="display: flex;flex-direction: column;font-size:14px;border-bottom:1px solid #e7e7e7;padding: 20px 0;">
+                            <div style="line-height: 30px;">
+                                <span style="color:#999;width: 80px;display: inline-block;">地区</span>
+                                <span id="user-info-province"></span>
+                                <span id="user-info-city"></span>
+                            </div>
+                            <div style="line-height: 30px;">
+                                <span style="color:#999;width: 80px;display: inline-block;">微信号</span>
+                                <span id="user-info-name"></span>
+                            </div>
+                        </li>
+                        <li style="padding: 40px 0;text-align:center;">
+                            <input type="hidden" name="user_id" id="user-info-id">
+                            <span onclick="sendMsgToUser()" id="send-msg"
+                                  style="background:#22940f;padding: 10px 80px;color:#fff;cursor:pointer;border-radius: 2px;">发消息</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--收藏列表窗口-->
+        <style>
+            .ellipsis {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            #collection-box .collection-msg {
+                color: #000;
+                font-size: 15px;
+                flex: 1;
+                display: -webkit-box;
+                word-wrap: break-word;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            #collection-box ul.content {
+                height: 100%;
+                overflow-y: auto;
+                padding: 0px 60px;
+            }
+
+            #collection-box ul.content li {
+                display: flex;
+                border-bottom: 1px solid #e7e7e7;
+                padding: 20px 0;
+                transition: ease .2s;
+            }
+
+            #collection-box .collection-source {
+                width: 150px;
+                display: flex;
+                flex-direction: column;
+                text-align: right;
+                font-size: 13px;
+                color: #999999;
+                padding-left: 20px;
+                box-sizing: border-box;
+            }
+
+            #collection-box .collection-source > div {
+                flex: 1;
+                display: table-cell;
+                vertical-align: bottom;
+                cursor: pointer;
+            }
+
+            #collection-box .collection-msg {
+                vertical-align: -webkit-baseline-middle;
+            }
+        </style>
+        <div id="collection-box" class="talk_window" style="display:none;">
+            <div class="windows_top">
+                <div class="windows_top_box">
+                    <ul class="window_icon">
+                        <li><a href=""><img src="images/icon/icon7.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon8.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon9.png"/></a></li>
+                        <li><a href=""><img src="images/icon/icon10.png"/></a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="windows_body" style="height: 100%;">
+                <div class="office_text" style="height: 100%;">
+                    <ul class="content">
+                        <!--                        <li>-->
+                        <!--                            <div class="collection-msg">-->
+                        <!--                                <span>-->
+                        <!--                                    11111111111111111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222-->
+                        <!--                                </span>-->
+                        <!--                            </div>-->
+                        <!--                            <div class="collection-source" >-->
+                        <!--                                <div>-->
+                        <!--                                    <span>-->
+                        <!--                                        19/01/12-->
+                        <!--                                    </span>-->
+                        <!--                                </div>-->
+                        <!--                                <div class="ellipsis">-->
+                        <!--                                    <span>来自：样子2222222222211111111111122</span>-->
+                        <!--                                </div>-->
+                        <!--                            </div>-->
+                        <!--                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--右键点击菜单-->
+<style>
+    .contextmenu {
+        display: none;
+        position: absolute;
+        /*width: 110px;*/
+        margin: 0;
+        padding: 0;
+        background: #FFFFFF;
+        border-radius: 5px;
+        list-style: none;
+        box-shadow: 0 15px 35px rgba(50, 50, 90, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+        overflow: hidden;
+        z-index: 999999;
+        font-size: inherit;
+    }
+
+    .contextmenu li {
+        text-align: center;
+        transition: ease .2s;
+    }
+
+    .contextmenu li:hover {
+        background: #e2e2e2;
+    }
+
+    .contextmenu li a {
+        display: block;
+        padding: 5px 20px;
+        color: #222;
+        text-decoration: none;
+        transition: ease .2s;
+        text-align: left;
+    }
+
+    .contextmenu li:hover a {
+        color: #222;
+    }
+
+    #send-msg:hover {
+        background: #186907;
+    }
+</style>
+<ul class="contextmenu">
+    <!--    <li><a href="#">置顶</a></li>-->
+    <!--    <li><a href="#">消息免打扰</a></li>-->
+    <li id="contextmenu-delete" onclick="deleteChat()"><a href="#">删除聊天</a></li>
+</ul>
+
+<!--表情包-->
+<style>
+    .emotion-box {
+        width: 484px;
+        height: 310px;
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        display: none;
+        padding: 20px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        overflow-y: auto;
+    }
+
+    .emotion-box ul:before {
+        clear: both !important;
+    }
+
+    .emotion-box ul li {
+        cursor: pointer;
+        float: left;
+        padding: 5px;
+    }
+</style>
+<div class="emotion-box">
+    <ul class="emotion-list">
+        <li>
+            <img src="emotion/1.gif" alt="">
+        </li>
+    </ul>
+</div>
+
+<!--模态框-->
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="modal-box"></div>
+
+
+<!--退出弹出询问框-->
+<style>
+    .am-modal-bd {
+        border: none;
+    }
+
+    .am-modal-footer {
+        display: block;
+        padding: 0 20px;
+    }
+
+    .am-modal-btn {
+        display: inline-block;
+        border: none !important;
+        color: #808080;
+        font-size: 14px;
+        float: right;
+    }
+</style>
+<div class="am-modal am-modal-confirm" tabindex="-1" id="my-logout-confirm" style="color: #000;font-family:'楷体';">
+    <div class="am-modal-dialog" style="border-radius: 4px;">
+        <div class="am-modal-hd" style="text-align: left;padding: 15px 10px 0px 20px;font-size: 20px">提示</div>
+        <div class="am-modal-bd" style="padding: 20px;font-size: 15px;text-align: left;">
+            您确定要退出聊天吗？
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-confirm style="color: #1AAD19">确定</span>
+            <span class="am-modal-btn" data-am-modal-cancel style="margin-right: 20px;">取消</span>
+        </div>
+    </div>
+</div>
+
+<!--存储当前操作的全局用户id-->
+<input type="hidden" name="uid" id="operate-uid">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/amazeui.min.js"></script>
+<script type="text/javascript" src="js/zUI.js"></script>
+<script type="text/javascript" src="js/wechat.js"></script>
+<script type="text/javascript" src="js/layer.js"></script>
+<!--script type="text/javascript" src="js/index.js"></script-->
+
+</body>
+</html>

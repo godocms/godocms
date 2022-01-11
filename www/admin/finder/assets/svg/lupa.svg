@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4f, 2020-05-01)"
+   sodipodi:docname="lupa.svg"
+   id="svg91"
+   class=""
+   xml:space="preserve"
+   style="enable-background:new 0 0 512 512"
+   viewBox="0 0 136 136.21852"
+   y="0"
+   x="0"
+   height="512"
+   width="512"
+   version="1.1"><metadata
+     id="metadata97"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
+     id="defs95">
+
+
+
+</defs><sodipodi:namedview
+     inkscape:current-layer="svg91"
+     inkscape:window-maximized="1"
+     inkscape:window-y="30"
+     inkscape:window-x="0"
+     inkscape:cy="256"
+     inkscape:cx="20.119241"
+     inkscape:zoom="0.72070312"
+     showgrid="false"
+     id="namedview93"
+     inkscape:window-height="705"
+     inkscape:window-width="1366"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" /><g
+     style="fill:#7f7f7f;fill-opacity:1"
+     transform="matrix(0.2660518,0,0,0.2660518,0.56091813,1.2473551)"
+     id="g1627"><g
+       style="fill:#7f7f7f;fill-opacity:1"
+       id="g1625"><path
+         style="fill:#7f7f7f;fill-opacity:1"
+         d="m 505.749,475.587 -145.6,-145.6 C 388.352,295.15 405.333,250.883 405.333,202.67 405.333,90.926 314.41,0.003 202.666,0.003 90.922,0.003 0,90.925 0,202.669 c 0,111.744 90.923,202.667 202.667,202.667 48.213,0 92.48,-16.981 127.317,-45.184 l 145.6,145.6 c 4.16,4.16 9.621,6.251 15.083,6.251 5.462,0 10.923,-2.091 15.083,-6.251 8.341,-8.341 8.341,-21.824 -10e-4,-30.165 z M 202.667,362.669 c -88.235,0 -160,-71.765 -160,-160 0,-88.235 71.765,-160 160,-160 88.235,0 160,71.765 160,160 0,88.235 -71.766,160 -160,160 z"
+         id="path1623" /></g></g></svg>

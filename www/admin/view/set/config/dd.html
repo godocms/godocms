@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>
+            dd
+        </title>
+        <link rel="stylesheet" href="/admin/component/layui/css/layui.css" />
+        <link rel="stylesheet" href="/admin/component/form/modules/formDesigner.css"
+        />
+        <link rel="stylesheet" href="/admin/component/form/modules/cron.css" />
+        <link rel="stylesheet" href="/admin/component/form/modules/labelGeneration.css"
+        />
+        <link rel="stylesheet" href="/admin/component/form/modules/formPreview.css"
+        />
+    </head>
+    
+    <body>
+        <div id="dd-body" style="margin: 10px 20px;">
+            <form class="layui-form layui-form-pane" style="height:100%;" id="dd"
+            lay-filter="dd">
+                <div class="mainBox">
+                    <div class="main-container">
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="dd-save">
+                                    提交
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary">
+                                    重置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script type="text/javascript" src="/admin/config/config.js">
+        </script>
+        <script type="text/javascript" src="/admin/component/layui/layui.js">
+        </script>
+        <script type="text/javascript" src="/admin/component/form/modules/Sortable/Sortable.js">
+        </script>
+        <script type="text/javascript" src="/admin/component/form/modules/numberInput.js">
+        </script>
+        <script type="text/javascript" src="/admin/component/form/modules/iconPicker.js">
+        </script>
+        <script type="text/javascript" src="/admin/component/form/modules/cron.js">
+        </script>
+        <script type="text/javascript" src="/admin/component/form/modules/iceEditor/iceEditor.js">
+        </script>
+        <script type="text/javascript" src="/admin/component/form/modules/labelGeneration.js">
+        </script>
+        <script type="text/javascript" src="/admin/component/form/js/config.js?v=100">
+        </script>
+        <script>
+            layui.use(["layer", "laytpl", "element", "form", "slider", "laydate", "rate", "colorpicker", "layedit", "carousel", "upload", "formField", "numberInput", "iconPicker", "cron", "labelGeneration"],
+            function() {
+                var $ = layui.jquery,
+                layer = layui.layer,
+                laytpl = layui.laytpl,
+                setter = layui.cache,
+                element = layui.element,
+                slider = layui.slider,
+                laydate = layui.laydate,
+                rate = layui.rate,
+                colorpicker = layui.colorpicker,
+                carousel = layui.carousel,
+                form = layui.form,
+                upload = layui.upload,
+                layedit = layui.layedit,
+                formField = layui.formField,
+                hint = layui.hint,
+                numberInput = layui.numberInput,
+                iconPicker = layui.iconPicker,
+                cron = layui.cron,
+                req = _req(),
+                labelGeneration = layui.labelGeneration;
+                _get(layui, "set/setBefore?conftype=" + req.conftype,
+                function(res) {
+                    form.val("dd", res);
+                });
+                form.on("submit(dd-save)",
+                function(data) {
+                    data.field["conftype"] = "dd";
+                    _post(layui, "set/setConf", data.field,
+                    function(res) {
+                        parent.location.reload();
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                    return false;
+                });
+            });
+        </script>
+    </body>
+
+</html>

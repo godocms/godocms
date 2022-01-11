@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>图片编辑器</title>
+    <link type="text/css" href="css/tui-color-picker.css" rel="stylesheet"/>
+    <link type="text/css" href="css/tui-image-editor.min.css" rel="stylesheet" />
+    <link type="text/css" href="css/fonts.css?family=Noto+Sans" rel="stylesheet" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="tui-image-editor-container"></div>
+    <script src="/admin/config/config.js"></script>
+    <script src="/admin/component/layui/layui.js"></script>
+    <script type="text/javascript" src="js/fabric.js"></script>
+    <script type="text/javascript" src="js/tui-code-snippet.min.js"></script>
+    <script type="text/javascript" src="js/tui-color-picker.js"></script>
+    <script type="text/javascript" src="js/FileSaver.min.js"></script>
+    <script type="text/javascript" src="js/tui-image-editor.min.js"></script>
+    <!--script type="text/javascript" src="js/theme/white-theme.js"></script-->
+    <script type="text/javascript" src="js/theme/black-theme.js"></script>
+    <script>
+      // Image editor
+      layui.use(['layer'], function() {
+        let $ = layui.$,
+			layer = layui.layer,
+            req = _req(),
+            id = req.id;
+        let imageEditor;
+        
+        if(id) {
+            __get('picedit/editBefore?id=' + id, res => {
+                //console.log(res)
+                //console.log(res.data.title)
+                //imageEditor.loadImageFromURL(res.data.url, '1639630009824image2').then(r => {
+                //    console.log(r)
+                //})
+                imageEditor = new tui.ImageEditor('#tui-image-editor-container', {
+                    includeUI: {
+                    loadImage: {
+                        path: res.data.url,
+                        name: res.data.title,
+                    },
+                    theme: blackTheme, // or whiteTheme
+                    //initMenu: 'filter',
+                    menuBarPosition: 'bottom',
+                    },
+                    cssMaxWidth: 700,
+                    cssMaxHeight: 500,
+                    usageStatistics: false,
+                });
+                $('.tui-image-editor-save-btn').click(e => {
+                    let content = imageEditor.toDataURL();
+                     __post('picedit/edit',{id, content : content}, res => {
+						layer.msg('编辑成功', {icon : 1});
+
+				    })
+                })
+            })
+        }else{
+            imageEditor = new tui.ImageEditor('#tui-image-editor-container', {
+                    includeUI: {
+                    loadImage: {
+                        path: 'img/sampleImage2.png',
+                        name: 'sampleImage',
+                    },
+                    theme: blackTheme, // or whiteTheme
+                    //initMenu: 'filter',
+                    menuBarPosition: 'bottom',
+                    },
+                    cssMaxWidth: 700,
+                    cssMaxHeight: 500,
+                    usageStatistics: false,
+            });
+        }
+        window.onresize = function () {
+            imageEditor.ui.resizeEditor();
+        };
+        $('.tui-image-editor-save-btn').click(e => {
+            //console.log(e)
+            let content = imageEditor.toDataURL();
+            //console.log(content)
+            if(!id) {
+                layer.prompt({
+                    formType: 0,
+                    value: 'image',
+                    title: '请输入图片名字',
+                    area: ['200px', '30px'] //自定义文本域宽高
+                }, function(value, index, elem){
+                    //alert(value); //得到value
+                    __post('picedit/add',{title : value, content : content}, res => {
+						//console.log(res.data)
+						id = res.data;
+                        layer.close(index);
+						layer.msg('保存成功', {icon : 1});
+
+					})
+                });
+            }else{
+                __post('picedit/edit',{id, content : content}, res => {
+						layer.msg('编辑成功', {icon : 1});
+
+				})
+            }
+        })
+      })
+      
+    </script>
+  </body>
+</html>

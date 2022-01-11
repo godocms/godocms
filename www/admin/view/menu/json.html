@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>sql查询</title>
+        <link rel="stylesheet" href="../../component/ui/css/ui.css"/>
+        <style>
+            .layui-textarea {
+                height: 220px;
+            }
+        </style>
+    </head>
+
+    <body class="pear-container">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-form-item layui-form-text">
+                    <textarea name="code" placeholder="" id="code" class="layui-textarea"></textarea>
+                </div>
+                <div class="layui-form-item layui-inline"></button>
+                <button type="button" class="pear-btn pear-btn-md" id="copy">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                   复制
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../config/config.js"></script>
+    <script src="../../component/layui/layui.js"></script>
+    <script>
+        layui.use(['layer'], function () {
+            let layer = layui.layer,
+                $ = layui.$,
+                req = _req();
+
+            let MODULE_PATH = "./";
+            //json格式美化
+            function prettyFormat(json) {
+                try {
+                    // 设置缩进为2个空格
+                    str = JSON.stringify(json, null, 2);
+                    str = str
+                        .replace(/&/g, '&')
+                        .replace(/</g, '<')
+                        .replace(/>/g, '>');
+                    return str.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                        var cls = 'number';
+                        if (/^"/.test(match)) {
+                            if (/:$/.test(match)) {
+                                cls = 'key';
+                            } else {
+                                cls = 'string';
+                            }
+                        } else if (/true|false/.test(match)) {
+                            cls = 'boolean';
+                        } else if (/null/.test(match)) {
+                            cls = 'null';
+                        }
+                        //return '<span class="' + cls + '">' + match + '</span>';
+                        return match;
+                    });
+                } catch (e) {
+                    alert("异常信息:" + e);
+                }
+
+            }
+            if (req.id) {
+                _get(layui, 'menu/sql?id=' + req.id, res => {
+                    console.log(res)
+                    $('#code').val(prettyFormat(res));
+                    $('#copy').on('click', e => {
+                        let res = document.getElementById("code");
+                        res.select(); // 选择对象
+                        document.execCommand("Copy");
+                        layer.msg('复制成功', {icon:1})
+                    })
+                })
+            }
+
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8">
+		<title>JSONEdit</title>
+		<link rel="icon" href="img/favicon.png">
+		<meta name="description" content="An easy to use JSON editor with GUI.">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href='layout/layout.css' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+		<div class="modal" id="modal-string-bg">
+			<div id="modal-string" class="modal-content">
+				<h2>加载json</h2>
+				<textarea id="string-input" class="string-input" placeholder="复制json到这里"></textarea>
+				<p align="right">
+					<button id="load-string" class="raised-button">加载JSON字符串</button>
+				</p>
+
+			</div>
+		</div>
+		<div class="modal" id="modal-string-out-bg">
+			<div id="modal-string-out" class="modal-content">
+				<h2>输出json</h2>
+				<textarea id="string-output" class="string-input" readonly></textarea>
+				<p align="right">
+					<button id="copy-string" class="raised-button">复制</button>
+				</p>
+
+			</div>
+		</div>
+		<div class="modal" id="modal-new-json-bg">
+			<div id="modal-new-json-root" class="modal-content-small">
+				<h2>选择一个根节点</h2>
+				<label><input name="root" type="radio" id="option-ary" value="ary">数组</label><br>
+				<label><input name="root" type="radio" id="option-obj" value="obj">对象</label>
+				<p align="right">
+					<button id="new-json" class="raised-button">创建JSON</button>
+				</p>
+
+			</div>
+		</div>
+		<div class="modal" id="modal-setting-bg">
+			<div id="modal-setting" class="modal-content-small">
+				<h2>设置</h2>
+				<label><input checked name="setting" type="checkbox" id="option-type-convert" value="ary">自动转换</label><br>
+				<p class="description">自动将属性转换为它们各自的数据类型（数字、布尔值等）。</p>
+				<p align="right">
+					<button id="save-setting" class="raised-button">保存</button>
+				</p>
+
+			</div>
+		</div>
+		<nav id="top-bar">
+			<!-- TODO change this to nav bar with menus? -->
+			<ul>
+				<li>
+					<button id="back-button" class="bar-items">返回</button>
+				</li>
+				<li>
+					<button id="new-json-button" class="bar-items">创建</button>
+				</li>
+				<li>
+					<button id="load-json-button" class="bar-items">载入</button>
+					<ul>
+						<a id="load-file-button">
+							<li class="menu-items">从json文件</li>
+						</a>
+						<a id="load-string-button">
+							<li class="menu-items">从json字符串</li>
+						</a>
+					</ul>
+				</li>
+				<li id="save-json-button">
+					<button class="bar-items">保存...</button>
+					<ul>
+						<a id="save-file-button">
+							<li class="menu-items">文件</li>
+						</a>
+						<a id="save-string-button">
+							<li class="menu-items">字符串</li>
+						</a>
+					</ul>
+				</li>
+				<li id="edit-button">
+					<button class="bar-items">编辑</button>
+					<ul>
+						<a id="copy-button">
+							<li class="menu-items">复制当前对象</li>
+						</a>
+						<a id="paste-button">
+							<li class="menu-items">黏贴对象</li>
+						</a>
+						<a id="clear-button">
+							<li class="menu-items">清除JSON value</li>
+						</a>
+					</ul>
+				</li>
+			</ul>
+			<button class="bar-items" id="setting-button">设置</button>
+
+		</nav>
+		<main>
+			<div id="browser">
+				<input id="searchbox" placeholder="搜索..."/>
+				<ul id="tree"></ul>
+			</div>
+			<div id="editor">
+				<div id="editor-content"></div>
+			</div>
+		</main>
+
+	</body>
+	<footer>
+		
+	</footer>
+	<script src="script/editor.js"></script>
+</html>

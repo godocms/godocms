@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文档编辑器</title>
+</head>
+<link rel="stylesheet" href="/admin/component/layui/css/layui.css">
+<style>
+body{
+    height: 100vh;
+    width: 96%;
+    margin: 10px auto;
+  }
+ 
+  .title{
+    display: block;
+    
+    width: 100%;
+    font-size: 1.2rem;
+    height:36px;
+    margin: 20px auto;
+    text-align: center;
+    border-bottom: 1px solid #eeeeee;
+  }
+  .title input {
+      border:none;
+      text-align: center;
+      line-height: 35px;
+      height: 35px;
+      width: 95%;
+      float: left;
+      
+  }
+  .title span{
+      float: right;
+      width: 3.9%; 
+  }
+  .title span img{
+      width: 1.5rem;
+      height: 1.5rem;
+      cursor: pointer;
+  }
+  
+</style>
+<body>
+    <div class="main">
+        <div class="title">
+            <input type="text" name="title" id="title" placeholder="请输入标题">
+            <span id="saveBtn" title="保存">
+                <img src="tinymce/save.png">
+            </span>
+        </div>
+        
+        <textarea name="content" id="content"></textarea>
+    </div>
+    
+</body>
+
+<script src="/admin/component/layui/layui.js"></script>
+<script src="/admin/config/config.js"></script>
+<script src="libs/Blob.js"></script>
+<script src="libs/mammoth.js"></script>
+<script src="libs/pdf.js"></script>
+<script src="libs/pdfmgr.js"></script>
+<script src="libs/marked.min.js"></script>
+<script src="libs/rtftohtml.js"></script>
+<script src="libs/html2docx.js"></script>
+<script src="libs/html2pdf.js"></script>
+<script src="libs/html2md.js"></script>
+<script src="libs/FileSaver.js"></script>
+<script src="libs/easyuploader.js"></script>
+<script>
+    layui.extend({
+        tinymce: '{/}./tinymce/tinymce'
+    }).use(['tinymce', 'util', 'layer'], function () {
+        let t = layui.tinymce
+        , util = layui.util
+        , layer = layui.layer
+        , $ = layui.$
+        , id = _req('id')
+
+        var edit = t.render({
+            elem: "#content", 
+            height: 780,
+        },function(opt,edit){
+            //加载完成后回调
+            if(id) {
+                __get('word/editBefore?id=' + id, res => {
+                    if(res.code == 0) {
+                        //console.log(res.data)
+                        $('#title').val(res.data.title);
+                        edit.setContent(res.data.content);
+                    }
+                    
+                })
+            }
+        });
+        
+        
+        $('#saveBtn').on('click', e => {
+            let content = edit.getContent(),
+            title = $('#title').val();
+            
+            if(!content || content == '') {
+                layer.msg('内容不能为空', {icon:2});
+                return;
+            }
+            if(!title || title == '') {
+                layer.msg('标题不能为空', {icon:2});
+                return;
+            }
+            if(!id) {
+                __post('word/add', {title,content}, res => {
+                    if(res.code == 0) {
+                        id = res.data;
+                        layer.msg('添加成功',{icon:1});
+                    }else {
+                        layer.msg(res.message, {icon : 2} );
+                    }
+                    
+                })
+            }else{
+                __post('word/edit', {id, title,content}, res => {
+                    if(res.code == 0) {
+                        layer.msg('编辑成功',{icon:1})
+                    }else{
+                        layer.msg(res.message,{icon : 2})
+                    }
+                })
+            }
+            
+        })
+
+    });
+
+    
+</script>
+</html>

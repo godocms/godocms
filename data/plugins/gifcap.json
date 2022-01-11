@@ -1,0 +1,8 @@
+{
+    "key": "godo-gifcap",
+    "url" : "gifcap",
+    "path": "godo-gifcap",
+    "isTest": false,
+    "type": "tools",
+    "name": "截屏"
+}

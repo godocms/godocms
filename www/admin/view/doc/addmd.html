@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>添加文档</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link rel="stylesheet" href="../../component/ui/css/ui.css"/>
+        <link rel="stylesheet" href="../../component/vditor/index.css"/>
+    </head>
+    <body>
+        <form class="layui-form" action="" lay-filter="editform">
+            <div class="mainBox">
+                <div class="main-container">
+                    <div class="main-container">
+                        <div class="layui-form-item">
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" lay-verify="required|len" autocomplete="off" min="1" placeholder="请输入标题" class="layui-input">
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required|len" autocomplete="off" min="1" placeholder="请输入文件名,不用带后缀" class="layui-input">
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" name="catename" id="catename" class="layui-input" style="position:absolute;z-index:2;width:80%;" lay-verify="required" value="" onkeyup="search()" autocomplete="off">
+                                <select type="text" id="cate_select" name="pid" lay-filter="cate_select" autocomplete="off" placeholder="上级分类" lay-verify="required" class="layui-select" lay-search>
+                                    
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" name="order_num" autocomplete="off" placeholder="排序" class="layui-input">
+                            </div>
+                            <div class="layui-input-inline">
+                                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="doc-save">
+                                    <i class="layui-icon layui-icon-ok"></i>
+                                    保存
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="veditor"></div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+        <script src="../../config/config.js"></script>
+        <script src="../../component/layui/layui.js"></script>
+        <script src="../../component/ui/ui.js"></script>
+        <script src="../../component/vditor/index.min.js"></script>
+        <script>
+            layui.use([
+                'form', 'layer', 'upload'
+            ], function () {
+                let form = layui.form,
+                    layer = layui.layer,
+                    $ = layui.$,
+                    upload = layui.upload,
+                    req = _req();
+                
+                form.verify({
+                    len: (val, item) => {
+                        let min = item.getAttribute("min")
+                        if (val.length < min) {
+                            return '长度不能小于' + min;
+                        }
+                    }
+                })
+                const vditor = new Vditor('veditor', {
+                    height: 680,
+                    placeholder: '请输入内容',
+                    value : '',
+                    cdn : '/admin/component/vditor',
+                    preview: {
+                                markdown: {
+                                    toc: true,
+                                    mark: true,
+                                    footnotes: true,
+                                    autoSpace: true,
+                                },
+                                math: {
+                                    engine: 'KaTeX',
+                                },
+                    },
+                    cache : {
+                        enable : false
+                    },
+                    upload : {
+                        url : apiUrl + 'doc/upload',
+                        headers : getHeader(),
+                        withCredentials : true,
+                        extraData : {
+                            did : req.did
+                        },
+                        format : (file, res) => {
+                            //console.log(res)
+                            let rt = JSON.parse(res);
+                            let r = {
+                                "msg": rt.message,
+                                "code": rt.code,
+                                "data": {
+                                    "errFiles": [],
+                                    "succMap": {}
+                                }
+                            }
+                            if(rt.code != 0) {
+                                layer.msg(rt.message);
+                            }else{
+                                r.data.succMap[rt.data.name] = rt.data.filename;
+                            }
+                            return JSON.stringify(r)
+                        } 
+
+                    }
+                })
+                //vditor.setValue('', true);
+                //vditor.clearCache()
+                //
+                if(req.did) {
+                    _get(layui, 'doc/addBefore?did=' + req.did, res => {
+                        //console.log(res)
+                        res.forEach(d => {
+                            //console.log(d)
+                            $("#cate_select").append(new Option(d.title, d.title));
+                        });
+                        form.render("select");
+                        $("#catename").val(res[0]['title']);
+                    });
+                }else{
+                    layer.msg('请附加pid')
+                }
+                
+
+                //监听提交
+                form.on('submit(doc-save)', function (data) {
+                    data = data.field;
+                    data.content = vditor.getValue();
+                    data.did = req.did;
+                    //console.log(data);
+                    //return false;
+                    _post(layui, 'doc/addmd', data, res => {
+                        //console.log(res)
+                        //parent.render();
+                        layer.msg('保存成功',{
+                            icon: 1, time: 1000
+                        });
+                        //添加的时候要关闭，避免多次提交同样的数据
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+                        
+                        return false;
+
+                    })
+
+                    return false;
+                });
+
+                form.on('select(cate_select)', function (data) { //选择分类 赋值给input框
+                    $("#catename").val(data.value);
+                    $("#cate_select")
+                        .next()
+                        .find("dl")
+                        .css({"display": "none"});
+                    form.render();
+                });
+                window.search = function () {
+                    var value = $("#catename").val();
+                    $("#cate_select").val(value);
+                    form.render();
+                    $("#cate_select")
+                        .next()
+                        .find("dl")
+                        .css({"display": "block"});
+                    var dl = $("#cate_select")
+                        .next()
+                        .find("dl")
+                        .children();
+                    var j = -1;
+                    for (var i = 0; i < dl.length; i++) {
+                        if (dl[i].innerHTML.indexOf(value) <= -1) {
+                            dl[i].style.display = "none";
+                            j++;
+                        }
+                        if (j == dl.length - 1) {
+                            $("#cate_select")
+                                .next()
+                                .find("dl")
+                                .css({"display": "none"});
+                        }
+                    }
+
+                }
+
+            });
+        </script>
+
+    </body>
+</html>

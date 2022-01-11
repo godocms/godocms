@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+
+program
+  .version(require('../package.json').version)
+  .usage('<command> [options]')
+  .command('new', 'generate a new plugin')
+  .command('add', 'add a new plugin from npmjs.org')
+  .command('list', 'list all plugins')
+  .command('remove', 'remove one plugin')
+  .command('start', 'start godocms server')
+  .command('stop', 'stop godocms server')
+  .command('clean', 'Clear the project template cache')
+  .parse(process.argv);

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑菜单</title>
+    <link rel="stylesheet" href="../../component/ui/css/ui.css" />
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="editform">
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单上级</label>
+                    <div class="layui-input-block">
+                        <span class="layui-btn pear-btn-success pear-btn-md" id="chooseRule">
+                                <span id="ruleText">顶层菜单</span>
+                                <i class="layui-icon layui-icon-down layui-font-12"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">后端路由</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="route" lay-verify="required" autocomplete="off" placeholder="请输入前端模版" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">前端模版</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="href" autocomplete="off" placeholder="请输入前端模版" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                        <label class="layui-form-label">菜单icon</label>
+                        <div class="layui-input-inline" style="width: auto">
+                            <input type="text" name="icon" autocomplete="off" class="layui-input icon-selected" />
+                        </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单类型</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="type" value="0" title="目录">
+                        <input type="radio" name="type" value="1" title="菜单">
+                        <input type="radio" name="type" value="2" title="按钮">
+                        <input type="radio" name="type" value="5" title="右键">
+                        <input type="radio" name="type" value="3" title="权限">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">桌面推荐</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="desktop" checked value="0" title="不推荐">
+                        <input type="radio" name="desktop" value="1" title="推荐">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+			       <label class="layui-form-label">菜单排序</label>
+			       <div class="layui-input-inline">
+			           <input type="text" name="order_num" lay-verify="required|number" autocomplete="off" class="layui-input">
+			       </div>
+		        </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="button-container">
+            <input type="hidden" name="id" lay-verify="required|number">
+            <input type="hidden" name="pid" id="pid" lay-verify="required|number">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+        </div>
+    </div>
+</form>
+<script src="../../config/config.js"></script>
+<script src="../../component/layui/layui.js"></script>
+<script src="../../component/ui/ui.js"></script>
+<script>
+layui.use(['form','jquery','iconSelectedPlus', 'dropdown'],function(){
+    let form = layui.form,
+        $ = layui.jquery,
+        iconSelectedPlus = layui.iconSelectedPlus,
+        dropdown = layui.dropdown,
+        req = _req();
+    //console.log(req)
+    
+    _get(layui, 'menu/one?id=' + req.id, res => {
+        //console.log(res)
+        form.val("editform",res);
+        $('#ruleText').text(res.pname);
+        iconSelectedPlus.render(".icon-selected", {
+            //position : 'right',
+            icons: iconSelectedPlus.icons.layui,
+            simple : true
+        });
+        dropdown.render({
+                        elem: '#chooseRule',
+                        data: res.list,
+                        trigger: 'hover',
+                        click: (d, el) => {
+                            $('#ruleText').text(d.title);
+                            $('#pid').val(d.id);
+                            return;
+                 }
+        })
+
+    })
+    
+    form.on('submit(user-save)', function(data){
+        let post = data.field;
+        //console.log(post)
+        _post(layui, 'menu/edit', post, res => {
+            //console.log(res)
+            parent.layui.treetable.reload("#power-table");
+            parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+            
+        })
+        return false;
+    });
+})
+</script>
+<script>
+</script>
+</body>
+</html>

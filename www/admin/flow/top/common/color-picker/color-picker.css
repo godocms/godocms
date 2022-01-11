@@ -1,0 +1,80 @@
+.q-flex {
+    display: flex;
+    align-items: center;
+}
+
+.q-flex__fill {
+    flex-grow: 1;
+}
+
+.q-color__block {
+    width: 100%;
+    height: 100%;
+}
+
+.q-color-input {
+    display: flex;
+    align-items: center;
+}
+
+.q-color-input > input {
+    flex-grow: 1;
+}
+
+.q-color-input > span {
+    min-width: 1.5em;
+    min-height: 1.5em;
+    height: 100%;
+    margin-left: 3px;
+    background-color: #F00;
+}
+
+.q-color-picker {
+    position: absolute;
+    z-index: 1000;
+    background-color: #FFF;
+    width: 260px;
+    /*border: solid 1px #888;*/
+    padding: 5px;
+    font-size: 0.9em;
+    /*transform: translateX(-50%);*/
+    box-shadow: 0 5px 10px #888;
+}
+
+.q-color-picker label {
+    white-space: nowrap;
+    user-select: none;
+    margin-right: 3px;
+}
+
+.q-color {
+    width: 25px;
+    height: 25px;
+    margin-left: 3px;
+    border: 1px solid rgb(204, 204, 204);
+}
+
+.q-color-picker .q-color {
+    width: 45px;
+    height: 1.5em;
+}
+
+.q-color-input > span, .q-color {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==);
+}
+
+.q-color__text{
+    letter-spacing: -0.1em;
+}
+
+.q-color-spectrum {
+    height: 200px;
+    width: 100%;
+    margin: 5px 0px;
+    cursor: crosshair;
+}
+
+.q-color-spectrum > canvas {
+    width: 100%;
+    height: 100%;
+}

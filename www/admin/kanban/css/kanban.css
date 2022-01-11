@@ -1,0 +1,292 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+.header{
+  width: 100%;
+  padding-top: 10px;
+  border-bottom: 1px solid rgb(224, 224, 224);
+  display: flex;
+  height: 2.6rem;
+}
+.header_left{
+  float: left;
+  width: 50%;
+}
+.header_left input {
+  border:none;
+  text-align: center;
+  width: 95%;
+  line-height: 2rem;
+  height: 2rem;
+  font-size:1.2rem;
+  float: left;
+  
+}
+.header_right{
+  float: right;
+  width: 49%;
+  text-align: right;
+  font-size: 1.5rem;
+}
+#myKanban {
+  overflow-x: auto;
+  padding: 20px 0;
+}
+
+.success {
+  background: #00b961;
+}
+
+.info {
+  background: #2a92bf;
+}
+
+.warning {
+  background: #f4ce46;
+}
+
+.error {
+  background: #fb7d44;
+}
+.kanban-board-header{
+  display: flex;
+  color:#ffffff;
+}
+.kanban-title-board{
+  width: 90%;
+}
+.kb-header-i{
+  width: 10%;
+  text-align: center;
+  cursor: pointer;
+  cursor: hand;
+  height: 1.2rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.kb1{
+  background: #009688;
+}
+.kb2{
+  background: #5FB878;
+}
+.kb3{
+  background: #393D49;
+}
+.kb4{
+  background: #1E9FFF;
+}
+.kb5{
+  background: #FFB800;
+}
+.kb6{
+  background: #FF5722;
+}
+.kb7{
+  background: #01AAED;
+}
+.kb8{
+  background: #2F4056;
+}
+.tb1{
+  background: #FAFAFA;
+}
+.tb2{
+  background: #F6F6F6;
+}
+.tb3{
+  background: #eeeeee;
+}
+.tb4{
+  background: #e2e2e2;
+}
+.tb5{
+  background: #dddddd;
+}
+.tb6{
+  background: #d2d2d2;
+}
+.tb7{
+  background: #cccccc;
+}
+.tb8{
+  background: #c2c2c2;
+}
+.custom-button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 7px 15px;
+  margin: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+} 
+
+.kanban-container {
+  position: relative;
+  box-sizing: border-box;
+  width: auto;
+}
+
+.kanban-container * {
+  box-sizing: border-box;
+}
+
+.kanban-container:after {
+  clear: both;
+  display: block;
+  content: "";
+}
+
+.kanban-board {
+  position: relative;
+  float: left;
+  background: #e2e4e6;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.kanban-board.disabled-board {
+  opacity: 0.3;
+}
+
+.kanban-board.is-moving.gu-mirror {
+  transform: rotate(3deg);
+}
+
+.kanban-board.is-moving.gu-mirror .kanban-drag {
+  overflow: hidden;
+  padding-right: 50px;
+}
+
+.kanban-board header {
+  font-size: 16px;
+  padding: 15px;
+}
+
+.kanban-board header .kanban-title-board {
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+.kanban-board header .kanban-title-button {
+  float: right;
+}
+
+.kanban-board .kanban-drag {
+  min-height: 500px;
+  padding: 20px;
+}
+
+.kanban-board:after {
+  clear: both;
+  display: block;
+  content: "";
+}
+
+.kanban-item {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 20px;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  animation: append-animate 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes append-animate {
+	from {
+		transform: translateY(-20px);
+	}
+	to {
+		transform: translateY(0px);
+	}
+}
+
+.kanban-item:hover {
+  cursor: move;
+}
+
+.kanban-item:last-child {
+  margin: 0;
+}
+
+.kanban-item.is-moving.gu-mirror {
+  transform: rotate(3deg);
+  height: auto !important;
+}
+
+/* Dragula CSS  */
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+}
+
+.gu-hide {
+  display: none !important;
+}
+
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+.gu-transit {
+  opacity: 0.2 !important;
+  transform: rotate(0deg) !important;
+}
+
+.drag_handler {
+    background: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    float: left;
+    top: -3px;
+    margin-right: 4px;
+}
+
+.drag_handler:hover {
+  cursor: move;
+}
+
+.drag_handler_icon {
+    position: relative;
+    display: block;
+    background: #000;
+    width: 24px;
+    height: 2px;
+    top: 12px;
+    transition: .5s ease-in-out;
+}
+
+.drag_handler_icon:before,
+.drag_handler_icon:after {
+    background: #000;
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transition: .5s ease-in-out;
+}
+
+ .drag_handler_icon:before {
+    top: 6px;
+}
+
+.drag_handler_icon:after {
+    bottom: 6px;
+}
+.item_kanban{
+  display: block;
+  width: 99%;
+  text-align: left;
+  word-wrap:break-word
+}

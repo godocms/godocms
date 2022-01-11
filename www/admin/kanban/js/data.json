@@ -1,0 +1,52 @@
+{
+    "code": 0,
+    "data": {
+        "info" : {
+            "maxid" : 2,
+            "userlist" : []
+        },
+        "list": [
+            {
+                "id": "taskboard_1",
+                "title": "看板1",
+                "class": "kb1",
+                "maxid": 2,
+                "item": [
+                    {
+                        "id": "task_1",
+                        "title": "任务11",
+                        "class": "tb1"
+                    },
+                    {
+                        "id": "task_2",
+                        "title": "任务12",
+                        "class": "tb2"
+                    }
+                ]
+            },
+            {
+                "id": "taskboard_2",
+                "title": "看板2",
+                "class": "kb2",
+                "maxid": 3,
+                "item": [
+                    {
+                        "id": "task_1",
+                        "title": "任务21",
+                        "class": "tb1"
+                    },
+                    {
+                        "id": "task_2",
+                        "title": "任务22",
+                        "class": "tb2"
+                    },
+                    {
+                        "id": "task_3",
+                        "title": "任务23",
+                        "class": "tb3"
+                    }
+                ]
+            }
+        ]
+    }
+}

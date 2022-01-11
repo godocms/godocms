@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>socket.io</title>
+
+    <link rel="stylesheet" href="socketio/css/normalize.min.css">
+
+    <link rel='stylesheet' href='socketio/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='socketio/css/font-awesome.min.css'>
+    <link rel='stylesheet' href='socketio/css/atelier-plateau-light.min.css'>
+
+    <link rel="stylesheet" href="socketio/css/style.css">
+    <link rel="stylesheet" href="lib/nav.css">
+
+</head>
+
+<body>
+
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Les trois balises méta-dessus * doivent!!! * venir en premier dans l'entête; tout autre contenu de l'entête doit venir * après * ces balises -->
+    <title>socket.io client</title>
+</head>
+
+<body>
+<!-- 导航栏 -->
+<div class="tool_nav">
+    <ul>
+        <li><a href="./index.html" class="tool_nav-a">HTTP接口</a></li>
+        <li><a href="./ws.html" class="tool_nav-a">WEBSOCKET</a></li>
+        <li><a href="./socketio.html" class="tool_nav-a tool_active">SOCKET.IO</a></li>
+        <li><a href="./time.html" class="tool_nav-a">时间戳转换</a></li>
+    </ul>
+</div>
+
+
+<div id="slideOut">
+    <!--   // Tab -->
+    <div class="slideOutTab">
+        <div>
+            <p>设置</p>
+        </div>
+    </div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">×</span></button>
+            <h4 class="modal-title">设置</h4>
+        </div>
+        <div class="modal-body">
+            <form id="connect" role="connection to server">
+
+                <div class="form-group">
+                    <input type="text" id="connect_server" class="form-control" placeholder="socket.io Server URL">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="connect_options" class="form-control" placeholder="socket.io options json">
+                </div>
+                <button type="submit" class="btn btn-success">Connect</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- // Scroll content -->
+<div class="content-area">
+    <div class="sidebar">
+        <div class="form">
+            <ul class="tab-group">
+                <li class="tab active"><a href="#emitting">Emit</a></li>
+                <li class="tab"><a href="#history">History</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="emitting">
+                    <form id="emitData">
+                        <div class="field-wrap">
+                            <label>
+                                event name<span class="req">*</span>
+                            </label>
+                            <input type="text" id="event-name" required autocomplete="on"/>
+                            <span class="label label-primary emitted-msg">Event emitted!</span>
+                            <span class="label label-danger emitted-failure-msg">Event failure</span>
+                        </div>
+
+                        <div class="field-wrap">
+
+                            <div id="editor">
+
+                            </div>
+                        </div>
+                        <button type="submit" id="submitEmit" class="btn button button-block" disabled/>
+                        Emit</button>
+
+                    </form>
+
+                </div>
+
+                <div id="history">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form id="clearHistory">
+                                <button type="submit" class="button-link white-link pull-right">Clear ALL History
+                                </button>
+                            </form>
+
+
+                        </div>
+                    </div>
+
+                    <div id="emitHistoryPanels" class="scrollHistory">
+                        <!--wait emiting-->
+                    </div>
+
+                </div>
+            </div>
+            <!-- tab-content -->
+
+        </div>
+        <!-- /form -->
+
+
+    </div>
+    <div class="content">
+
+        <div class="info">
+            <div class="panel panel-default listening">
+                <div class="panel-heading">
+
+                    <form id="addListener">
+                        <div class="input-group">
+                            <input type="text" id="listenEvent" class="form-control" placeholder="Event name...">
+
+                            <span class="input-group-btn">
+                  <button type="submit" class="btn btn-default btn-listening">Listen</button>
+                  <button type="button" class="btn btn-danger" onclick="clearAllEvents()">Clear all events</button>
+      </span>
+                        </div>
+                        <!-- /input-group -->
+                        <span class="label label-danger listen-failure-msg">Can't add duplicated or empty listener</span>
+                        <span class="label label-primary listen-added-msg">Listener added</span>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="collapse-group ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="controls pull-right">
+                            <button class="btn btn-primary open-button" type="button">
+                                Open all
+                            </button>
+                            <button class="btn btn-primary close-button" type="button">
+                                Collapse all
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="eventPanels" class="list-unstyled">
+                    <div id="panel-connected" class="panel panel-info">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                On "connect / disconnect" Events
+                                <div class="pull-right">
+                                    <a href="#" data-perform="panel-refresh" onclick="clearEvents('connectionPanel')"
+                                       class="btn btn-info btn-xs pull-right"><i class="fa fa-refresh"></i></a>
+                                    <a href="#" data-perform="panel-collapse" class="btn btn-info btn-xs pull-right"><i
+                                            class="fa fa-minus"></i></a>
+                                </div>
+                            </h4>
+                        </div>
+
+                        <div class="panel-wrapper collapse in">
+                            <div id="connectionPanel" class="panel-body"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <div class="alert alert-danger connection-alert disconnected-alert text-center">
+                <strong>Disconnected</strong>
+            </div>
+            <div class="alert alert-success connection-alert connected-alert text-center">
+                <strong>Connected!</strong>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</main>
+<!-- /.site-main -->
+</div>
+<!-- /.content-area -->
+
+
+<script src='socketio/js/jquery.min.js'></script>
+<script src='socketio/js/bootstrap.min.js'></script>
+<script src='socketio/js/jquery-ui.js'></script>
+<script src='socketio/js/ace.js'></script>
+<script src='socketio/js/highlight.min.js'></script>
+<script src="socketio/js/socket.io.slim.js"></script>
+<script src="socketio/js/pouchdb.min.js"></script>
+<script src="socketio/js/pouchdb.find.js"></script>
+<!--<script src="node_modules/lodash/lodash.js"></script>-->
+
+<script type="text/html" id="historyContent">
+    <div class="row">
+        <form id="form[[id]]">
+            <div class="col-sm-2">
+                <span class="text-muted">[[time]]</span>
+            </div>
+            <div class="col-sm-10">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" name="reqData" value='[[reqData]]'/>
+                    <span class="input-group-btn">
+                      <button type="submit" class="btn btn-success">Emit</button>
+                    </span>
+                </div>
+
+                <span class="label label-primary emitted-msg-[[id]]" style="display:none">Event emitted!</span>
+                <span class="label label-danger emitted-failure-msg-[[id]]" style="display:none">Event failure</span>
+                <input type="hidden" name="historyId" value="[[id]]">
+                <input type="hidden" name="event" value="[[event]]">
+            </div>
+
+
+        </form>
+    </div>
+</script>
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="socketio/js/buttons.js"></script>
+
+<script src="socketio/js/index.js"></script>
+<script src="socketio/js/app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>计划任务管理</title>
+		<link rel="stylesheet" href="/admin/component/ui/css/ui.css"/>
+	</head>
+	<body class="pear-container">
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<form class="layui-form" action="">
+					<div class="layui-form-item">
+						<div class="layui-form-item layui-inline">
+							<label class="layui-form-label">名称</label>
+							<div class="layui-input-inline">
+								<input type="text" name="title" placeholder="" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item layui-inline">
+							<button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+								<i class="layui-icon layui-icon-search"></i>
+								查询
+							</button>
+							<button type="reset" class="pear-btn pear-btn-md" lay-filter="user-reset" lay-submit>
+								<i class="layui-icon layui-icon-refresh"></i>
+								重置
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<table id="crons-table" lay-filter="crons-table"></table>
+			</div>
+		</div>
+
+		<script type="text/html" id="crons-toolbar">
+			<button class="layui-btn layui-btn-primary layui-border-red layui-btn-sm" lay-event="add">
+				<i class="layui-icon layui-icon-add-1"></i>
+		        新增
+		    </button>
+		</script>
+
+		<script type="text/html" id="crons-bar">
+			<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit">
+				<i class="layui-icon layui-icon-edit"></i>
+			</button>
+			<button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove">
+				<i class="layui-icon layui-icon-delete"></i>
+			</button>
+		</script>
+		<script type="text/html" id="crons-time">
+			{{layui.util.toDateString(d.add_time*1000, 'yyyy-MM-dd HH:mm:ss')}}
+		</script>
+		<script src="/admin/config/config.js"></script>
+		<script src="/admin/component/layui/layui.js"></script>
+		<script src="/admin/component/ui/ui.js"></script>
+		<script>
+			layui.use([
+				'table', 'form', 'jquery', 'common'
+			], function () {
+				let table = layui.table;
+				let form = layui.form;
+				let $ = layui.jquery;
+				let common = layui.common;
+
+				let MODULE_PATH = "./";
+
+				let cols = [
+					[
+						{
+							field: 'enable',
+							title: '是否开启',
+							align: 'center',
+							templet: function (d) {
+								let ckstr = '';
+								if (d.enable == 1) {
+									ckstr = 'checked';
+								}
+								return '<input type="checkbox" name="enable" value="' + d.id + '" lay-skin="switch" lay-text="开启|关闭" lay-filter="enable" ' + ckstr + '>';
+							},
+							unresize: true,
+							width: 100
+						}, {
+							field: 'id',
+							width: 80,
+							title: 'ID',
+							sort: true
+						}, {
+							field: 'name',
+							width: 120,
+							title: '名称'
+						}, {
+							field: 'handle',
+							width: 180,
+							title: '路径'
+						}, {
+							field: 'runtime',
+							width: 100,
+							title: '执行时间'
+						}, {
+							field: 'uptime',
+							width: 180,
+							title: '上次时间'
+						}, {
+							field: 'nexttime',
+							width: 180,
+							title: '下次时间'
+						}, {
+							title: '操作',
+							toolbar: '#crons-bar',
+							align: 'center',
+							width: 130
+						}
+					]
+				]
+
+				table.render({
+					elem: '#crons-table',
+					url: apiUrl + 'crons/list',
+					headers: getHeader(),
+					parseData: function (res) {
+						//console.log(res)
+						return {
+							"code": res.code, //解析接口状态
+							"msg": res.message, //解析提示文本
+							"count": res.data.count, //解析数据长度
+							"data": res.data.list //解析数据列表
+						};
+					},
+					page: true,
+					cols: cols,
+					skin: 'line',
+
+					toolbar: '#crons-toolbar',
+					defaultToolbar: [
+						{
+							title: '刷新',
+							layEvent: 'refresh',
+							icon: 'layui-icon-refresh'
+						},
+						'filter',
+						'print',
+						'exports'
+					]
+				});
+				form.on('switch(enable)', function(obj) {
+					var _this = $(obj.elem);
+					__post('crons/enable', {
+							id: obj.value,
+							val: obj.elem.checked
+						},
+						(res) => {
+							if (res.code == 0) {
+								layer.msg('编辑成功');
+							}
+
+						});
+
+				});
+				table.on('tool(crons-table)', function (obj) {
+					if (obj.event === 'remove') {
+						window.remove(obj);
+					} else if (obj.event === 'edit') {
+						window.edit(obj);
+					}
+				});
+
+				table.on('toolbar(crons-table)', function (obj) {
+					if (obj.event === 'add') {
+						window.add();
+					} else if (obj.event === 'refresh') {
+						window.refresh();
+					}
+				});
+				// 监听搜索操作
+
+				form.on('submit(crons-query)', function (data) {
+					table.reload('crons-table', {
+						where: {
+							param: $('form').serialize()
+						},
+						page: {
+							curr: 1
+						}
+					})
+					return false;
+				});
+				form.on('submit(crons-reset)', function (data) {
+					table.reload('crons-table', {
+						where: {
+							param: ''
+						},
+						page: {
+							curr: 1
+						}
+					});
+					return false;
+				})
+
+				window.add = function () {
+					layer.open({
+						type: 2,
+						title: '新增',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'edit.html'
+					});
+				}
+
+				window.edit = function (obj) {
+					layer.open({
+						type: 2,
+						title: '修改',
+						shade: 0.1,
+						offset: 'rt',
+						area: [
+							'80%', '100%'
+						],
+						anim: 1,
+						maxmin: true,
+						content: MODULE_PATH + 'edit.html?id=' + obj.data.id
+					});
+				}
+				window.remove = function (obj) {
+					layer.confirm('确定要删除', {
+						icon: 3,
+						title: '提示'
+					}, function (index) {
+						layer.close(index);
+						_post(layui, 'crons/del', {
+							id: obj.data.id
+						}, res => {
+							layer.msg('删除成功', {
+								icon: 1,
+								time: 1000
+							}, () => {
+								obj.del();
+							});
+						}, err => {
+							//layer.msg('删除失败',{icon:2,time:1000});
+						})
+					});
+				}
+
+				window.refresh = function (param) {
+					table.reload('crons-table');
+				}
+			})
+		</script>
+	</body>
+</html>

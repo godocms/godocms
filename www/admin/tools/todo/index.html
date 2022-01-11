@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" data-framework="jquery">
+	<head>
+		<meta charset="utf-8">
+		<title>todos</title>
+		<link rel="stylesheet" href="libs/todomvc-common/base.css">
+		<link rel="stylesheet" href="libs/todomvc-app-css/index.css">
+		<link rel="stylesheet" href="css/app.css">
+	</head>
+	<body>
+		<section class="todoapp">
+			<header class="header">
+				<h1>便签</h1>
+				<input class="new-todo" placeholder="需要做什么？按回车保存" autofocus>
+			</header>
+			<section class="main">
+				<input id="toggle-all" class="toggle-all" type="checkbox">
+				<label for="toggle-all">将所有标记为完成</label>
+				<ul class="todo-list"></ul>
+			</section>
+			<footer class="footer"></footer>
+		</section>
+		<footer class="info">
+			<p>双击编辑内容</p>
+			<p>内容存本地，请妥善保管</p>
+		</footer>
+		<script id="todo-template" type="text/x-handlebars-template">
+			{{#this}}
+			<li {{#if completed}}class="completed"{{/if}} data-id="{{id}}">
+				<div class="view">
+					<input class="toggle" type="checkbox" {{#if completed}}checked{{/if}}>
+					<label>{{title}}</label>
+					<button class="destroy"></button>
+				</div>
+				<input class="edit" value="{{title}}">
+			</li>
+		{{/this}}
+		</script>
+		<script id="footer-template" type="text/x-handlebars-template">
+			<span class="todo-count"><strong>{{activeTodoCount}}</strong> {{activeTodoWord}} 记录</span>
+			<ul class="filters">
+				<li>
+					<a {{#eq filter 'all'}}class="selected"{{/eq}} href="#/all">全部</a>
+				</li>
+				<li>
+					<a {{#eq filter 'active'}}class="selected"{{/eq}}href="#/active">进行中</a>
+				</li>
+				<li>
+					<a {{#eq filter 'completed'}}class="selected"{{/eq}}href="#/completed">已完成</a>
+				</li>
+			</ul>
+			{{#if completedTodos}}<button class="clear-completed">清除完成的</button>{{/if}}
+		</script>
+		<script src="libs/todomvc-common/base.js"></script>
+		<script src="libs/jquery/dist/jquery.js"></script>
+		<script src="libs/handlebars/dist/handlebars.js"></script>
+		<script src="libs/director/build/director.js"></script>
+		<script src="js/app.js"></script>
+	</body>
+</html>

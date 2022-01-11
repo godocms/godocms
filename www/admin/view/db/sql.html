@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>sql查询</title>
+    <link rel="stylesheet" href="../../component/ui/css/ui.css" />
+    <!-- Latest compiled and minified CSS -->
+    <script src="../../component/ui/table/jquery.min.js"></script>
+    <script src="../../component/ui/table/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../../component/ui/table/bootstrap.min.css">
+    <link rel="stylesheet" href="../../component/ui/table/bootstrap-table.min.css">
+    <script src="../../component/ui/table/bootstrap-table.min.js"></script>
+    <script src="../../component/ui/table/bootstrap-table-zh-CN.min.js"></script>
+    <style>
+        .layui-textarea {
+            height: 220px;
+        }
+    </style>
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-form-item layui-form-text">
+                <textarea name="code" placeholder="请输入SQL语句" id="code" class="layui-textarea"></textarea>
+            </div>
+            <div class="layui-form-item layui-inline">
+                <button type="button" class="pear-btn pear-btn-md pear-btn-primary" id="run">
+                    <i class="layui-icon layui-icon-search"></i>
+                    查询
+                </button>
+                <button type="button" class="pear-btn pear-btn-md pear-btn-success" id="butitySql">
+                    <i class="layui-icon layui-icon-light"></i>
+                    美化
+                </button>
+                <button type="button" class="pear-btn pear-btn-md" id="reset">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="layui-card">
+        <div class="layui-card-body" id="result">
+            <table id="table"></table>
+        </div>
+    </div>
+
+
+    <script src="../../config/config.js"></script>
+    <script src="../../component/layui/layui.js"></script>
+    <script src="../../component/ui/ui.js"></script>
+    <script src="../../component/ui/sql.js"></script>
+    <script>
+        layui.use([
+            'common', 'layer'
+        ], function () {
+            let common = layui.common;
+            let layer = layui.layer;
+            let req = _req();
+
+            let MODULE_PATH = "./";
+            if (req.table) {
+                _get(layui, 'db/getSql?table=' + req.table, res => {
+                    console.log(res)
+                    $('#code').val(res);
+                })
+            }
+            $('#butitySql').click((e) => {
+                //console.log(e)
+                let sql = $('#code').val();
+                if (sql) {
+                    try {
+                        let str = sqlFormatter.format(sql, {
+                            language: 'mysql',
+                            uppercase: true,
+                        });
+                        $('#code').val(str);
+                    } catch (e) {
+                        console.log(e)
+                        layer.msg(e.message)
+                    }
+
+                }
+            })
+            $('#reset').click(res => {
+                $('#code').val('');
+            })
+            $('#run').click(res => {
+                let code = $('#code').val();
+                _post(layui, 'db/runSql', {code}, res => {
+                    //console.log(res)
+                    if(res instanceof Array && res.length > 0) {
+                        window.renderTable(res)
+                    }
+                    else if(res instanceof Object) {
+                        $('#result').html(JSON.stringify(res))
+                    }else{
+                        $('#result').html(res)
+                    }
+
+                })
+            });
+            
+            window.renderTable = function(res) {
+                //console.log(res)
+                let rows = res[0], cols = [];
+                for(let p in rows) {
+                    cols.push({
+                        title: p,
+                        field : p
+                    });
+                }
+                // res.forEach(d => {
+                //     let c = [];
+                //     for(let r in d){
+                //         c.push(d[r])
+                //     }
+                //     rt.push(c)
+                // })
+                // console.log(rt)
+                // console.log(cols)
+                //console.log(res)
+                $('#table').bootstrapTable({
+                    columns: cols,
+                    data: res,
+                    pagination: true,
+                    showToggle : true
+                })
+  
+                //$('#sql-table').bootstrapTable({data})
+                // $('#sql-table').html('');
+                // $('#sql-table').DataTable({
+                //     data: rt,
+                //     columns: cols,
+                //     autoWidth : true
+                // } );
+            }
+        })
+    </script>
+</body>
+
+</html>

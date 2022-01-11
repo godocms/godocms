@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>添加接口测试</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/admin/component/ui/css/ui.css" />
+</head>
+<style>
+    .layui-table-cell {
+        overflow: visible;
+    }
+    
+    .layui-table-box {
+        overflow: visible;
+    }
+    
+    .layui-table-body {
+        overflow: visible;
+    }
+    /* 设置下拉框的高度与表格单元相同 */
+    td .layui-form-select{
+        margin-top: -3px;
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+    .layui-tab-content{
+        padding: 0;
+    }
+    /*
+    .layui-tab-left li{
+        display: block;
+    }
+    .layui-tab-left{
+        float: left;
+        width: 100px;
+    }
+    .layui-tab-left-content{
+        float: left;
+        width: 500px;
+    }*/
+</style>
+<body>
+
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="layui-form-item">
+                <form class="layui-form" action="" lay-filter="testform">
+                    <div class="layui-input-inline" style="width: 80px;">
+                        <select name="method" class="layui-select">
+                            <option value="post">POST</option>
+                            <option value="get">GET</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px;">
+                        <input type="text" class="layui-input" name="test_path">
+                    </div>
+                    <div class="layui-input-inline">
+                        <span class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="api-save">
+                            <i class="layui-icon layui-icon-ok"></i>
+                            发送
+                        </span>
+                    </div>
+                </form>
+
+            </div>
+            <div class="layui-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">发送参数</li>
+                    <li>Headers</li>
+                    <li>预想</li>
+                    <li>结果</li>
+                    <li>备注</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+<!-- 参数开始-->
+
+<script type="text/html" id="data-toolbar">
+    <span class="layui-btn layui-btn-primary layui-border-red layui-btn-sm" lay-event="add">
+        <i class="layui-icon layui-icon-add-1"></i>
+        新增
+    </span>
+    <span class="layui-btn layui-btn-primary layui-border-cyan layui-btn-sm" lay-event="init">
+        <i class="layui-icon layui-icon-refresh-3"></i>
+        初始化
+    </span>
+</script>
+<script type="text/html" id="data-editbar">
+    <span class="pear-btn pear-btn-danger pear-btn-sm"  lay-event="del">
+        <i class="layui-icon layui-icon-delete"></i>
+    </span>
+</script>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table id="data-table" class="layui-table" lay-filter="data-table">
+        <thead>
+            <tr>
+            <th lay-data="{field:'key',edit:true}">标志</th>
+            <th lay-data="{field:'def',edit:true}">输入</th>
+            <th lay-data="{templet: '#data-editbar'}">操作</th>
+            </tr> 
+        </thead>
+        <tbody id="data-area"></tbody>
+        </table>
+    </div>
+</div>
+<script type="text/html" id="data-tpl">
+    {{# layui.each(d, function(index, el){ }}
+       <tr>
+           <td>{{el.key}}</td>
+           <td>{{el.def}}</td>
+           <td></td>
+       </tr>
+    {{#  }); }}
+   </script>
+<!-- 参数结束-->
+
+                    </div>
+                    <div class="layui-tab-item">
+<!-- header开始-->
+
+<script type="text/html" id="head-toolbar">
+    <span class="layui-btn layui-btn-primary layui-border-red layui-btn-sm" lay-event="addhead">
+        <i class="layui-icon layui-icon-add-1"></i>
+        新增
+    </span>
+    <span class="layui-btn layui-btn-primary layui-border-cyan layui-btn-sm" lay-event="inithead">
+        <i class="layui-icon layui-icon-refresh-3"></i>
+        初始化
+    </span>
+</script>
+<script type="text/html" id="head-editbar">
+    <span class="pear-btn pear-btn-danger pear-btn-sm" lay-event="delhead">
+        <i class="layui-icon layui-icon-delete"></i>
+    </span>
+</script>
+<div class="layui-card">
+    <div class="layui-card-body">
+    <form class="layui-form" action="" lay-filter="headform">
+        <table id="head-table" class="layui-table" lay-filter="head-table">
+        <thead>
+            <tr>
+            <th lay-data="{field:'key',edit:true}">标志</th>
+            <th lay-data="{field:'val',edit:true}">输入</th>
+            <th lay-data="{templet: '#head-editbar'}">操作</th>
+            </tr> 
+        </thead>
+        <tbody id="head-area"></tbody>
+        </table>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label">携带cookie</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" checked="" name="withCredentials" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+        </div>
+    </div>
+</form>
+    </div>
+</div>
+<script type="text/html" id="head-tpl">
+    {{# layui.each(d, function(index, el){ }}
+       <tr>
+           <td>{{el.key}}</td>
+           <td>{{el.val}}</td>
+           <td></td>
+       </tr>
+    {{#  }); }}
+   </script>
+<!-- header结束-->
+                    </div>
+                    <div class="layui-tab-item">
+<!-- 预想开始-->
+<!-- 预想top开始-->
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+      <label class="layui-form-label">状态Status</label>
+      <div class="layui-input-inline" style="width: 200px;">
+        <input type="text" name="status" value="200" lay-verify="status" autocomplete="off" placeholder="请输入status" class="layui-input">
+      </div>
+    </div>
+</form>
+<!-- 预想top结束-->
+<div class="layui-card">
+    <div class="layui-card-body" style="padding:0 10px">
+<!-- 预想结构开始-->
+<script type="text/html" id="restop-toolbar">
+    <span class="layui-btn layui-btn-primary layui-border-red layui-btn-sm" lay-event="addrestop">
+        <i class="layui-icon layui-icon-add-1"></i>
+        新增
+    </span>
+    <span class="layui-btn layui-btn-primary layui-border-cyan layui-btn-sm" lay-event="initrestop">
+        <i class="layui-icon layui-icon-refresh-3"></i>
+        初始化
+    </span>
+</script>
+<script type="text/html" id="restop-editbar">
+    <span class="pear-btn pear-btn-danger pear-btn-sm"  lay-event="delrestop">
+        <i class="layui-icon layui-icon-delete"></i>
+    </span>
+</script>
+
+    <blockquote class="layui-elem-quote">结构</blockquote>
+    <form class="layui-form" action="" lay-filter="restopform">
+        <table id="restop-table" class="layui-table" lay-filter="restop-table">
+        <thead>
+            <tr>
+            <th lay-data="{field:'key',edit:true}">标志</th>
+            <th lay-data="{field:'val',edit:true}">预想值</th>
+            <th lay-data="{field:'stype',width:120}">类型</th>
+            <th lay-data="{field:'isdata',width:80}">数据对象</th>
+            <th lay-data="{templet: '#restop-editbar'}">操作</th>
+            </tr> 
+        </thead>
+        <tbody id="restop-area"></tbody>
+        </table>
+    </form>
+    <script type="text/html" id="restop-tpl">
+    {{# layui.each(d, function(index, el){ }}
+       <tr>
+           <td>{{el.key}}</td>
+           <td>{{el.val}}</td>
+           <td>
+           <select class="layui-select" name="stype" style="width:70px">
+                <option value="exist"{{ el.stype === 'exist' ? ' selected' : '' }}>存在</option>
+                <option value="string"{{ el.stype === 'string' ? ' selected' : '' }}>字符串</option>
+                <option value="number"{{ el.stype === 'number' ? ' selected' : '' }}>数字</option>
+                <option value="array"{{ el.stype === 'array' ? ' selected' : '' }}>数组</option>
+                <option value="object"{{ el.stype === 'object' ? ' selected' : '' }}>对象</option>
+            </select>
+           </td>
+           <td><input type="radio" name="dataTopField" value="{{el.key}}"{{ el.isdata === 1 ? ' checked' : '' }} title=""></td>
+           <td></td>
+       </tr>
+    {{#  }); }}
+   </script>
+   <!-- 预想结构结束-->
+   <!-- 预想数据开始-->
+    <blockquote class="layui-elem-quote" style='margin-top:15px'>数据</blockquote>
+    <form class="layui-form" action="" lay-filter="resdataform" id="resdataform">
+        <table id="resdata-table" class="layui-table" lay-filter="resdata-table">
+        <thead>
+            <tr>
+            <th lay-data="{field:'key',edit:true}">标志</th>
+            <th lay-data="{templet: '#resdata-dtype',width:120}">判断</th>
+            <th lay-data="{field:'val',edit:true}">预想值</th>
+            <th lay-data="{templet: '#resdata-editbar'}">操作</th>
+            </tr> 
+        </thead>
+        <tbody id="resdata-area">
+
+        </tbody>
+        </table>
+
+    </form>
+    <script type="text/html" id="resdata-dtype">
+     <select class="layui-select deep-select" name="dtype">
+               <option value="exist"{{ d.dtype === 'exist' ? ' selected' : '' }}>存在</option>
+                <option value="eq"{{ d.dtype === 'eq' ? ' selected' : '' }}>等于</option>
+                <option value="neq"{{ d.dtype === 'neq' ? ' selected' : '' }}>不等于</option>
+                <option value="gt"{{ d.dtype === 'gt' ? ' selected' : '' }}>大于</option>
+                <option value="lt"{{ d.dtype === 'lt' ? ' selected' : '' }}>小于</option>
+                <option value="gte"{{ d.dtype === 'gte' ? ' selected' : '' }}>大于等于</option>
+                <option value="lte"{{ d.dtype === 'lte' ? ' selected' : '' }}>小于等于</option>
+                <option value="in"{{ d.dtype === 'in' ? ' selected' : '' }}>包含</option>
+            </select>
+    </script>
+    <script type="text/html" id="resdata-toolbar">
+    <span class="layui-btn layui-btn-primary layui-border-red layui-btn-sm" lay-event="addresDataOne">
+        <i class="layui-icon layui-icon-add-1"></i>
+        新增单项
+    </span>
+    <span class="layui-btn layui-btn-primary layui-border-cyan layui-btn-sm" lay-event="addresDataDb">
+        <i class="layui-icon layui-icon-add-1"></i>
+        从数据库新增
+    </span>
+</script>
+<script type="text/html" id="resdata-editbar">
+    <span class="pear-btn pear-btn-primary pear-btn-sm"  lay-event="deepresdata">
+        <i class="layui-icon layui-icon-at"></i>深度
+    </span>
+    <span class="pear-btn pear-btn-danger pear-btn-sm"  lay-event="delresdata">
+        <i class="layui-icon layui-icon-delete"></i>删除
+    </span>
+</script>
+    <script type="text/html" id="resdata-tpl">
+    {{# layui.each(d, function(index, el){ }}
+       <tr>
+           <td>{{el.key}}</td>
+           <td>
+           </td>
+           <td>{{el.val}}</td>
+           
+           <td></td>
+       </tr>
+    {{#  }); }}
+   </script>
+    <!-- 预想数据结束-->
+    <!-- 预想数据深度开始-->
+    <div id="deeparea"></div>
+    <script type="text/html" id="deeptpl">
+        <div class="layui-card" id="deep_{{d.key}}">
+            <div class="layui-card-body" style="padding:0 10px">
+            <blockquote class="layui-elem-quote" style='margin-top:15px'>数据{{d.key}}</blockquote>
+            <form class="layui-form" action="" lay-filter="deepform_{{d.key}}" id="deepform_{{d.key}}">
+                <div class="layui-table-tool">
+                    <div class="layui-table-tool-temp">
+                         <span class="layui-btn layui-btn-primary layui-border-red layui-btn-sm addDeepOne" data-id="{{d.key}}">
+                        <i class="layui-icon layui-icon-add-1"></i>
+                        新增单项
+                    </span>
+                    <span class="layui-btn layui-btn-primary layui-border-cyan layui-btn-sm addDeepDb" data-id="{{d.key}}">
+                        <i class="layui-icon layui-icon-add-1"></i>
+                        从数据库新增
+                    </span>
+                    </div>
+                </div>
+                <table id="deeptable_{{d.key}}" class="layui-table" lay-filter="deeptable_{{d.key}}">
+                <thead>
+                    <tr>
+                    <th lay-data="{field:'key',edit:true}">标志</th>
+                    <th lay-data="{templet: '#resdata-dtype',width:120}">判断</th>
+                    <th lay-data="{field:'val',edit:true}">预想值</th>
+                    <th lay-data="{templet: '#resdata-editbar'}">操作</th>
+                    </tr> 
+                </thead>
+                <tbody id="deeparea_{{d.key}}">
+                    {{# layui.each(d.list, function(index, el){ }}
+                    <tr>
+                        <td>{{el.key}}</td>
+                        <td></td>
+                        <td>{{el.val}}</td>
+                        <td></td>
+                    </tr>
+                    {{#  }); }}
+                </tbody>
+                </table>
+
+            </form>
+            <div id="deepdtype_{{d.key}}" style="display:none">
+               
+            </div>
+            <div id="deepeditbar_{{d.key}}" style="display:none">
+            <span class="pear-btn pear-btn-primary pear-btn-sm"  lay-event="deepresdata">
+                <i class="layui-icon layui-icon-at"></i>深度
+            </span>
+            <span class="pear-btn pear-btn-danger pear-btn-sm"  lay-event="delresdata">
+                <i class="layui-icon layui-icon-delete"></i>删除
+            </span>
+            </div>
+            </div>
+        </div>
+    </script>
+    <!-- 预想数据深度结束-->
+    </div>
+</div>
+
+
+<!-- 预想结束-->
+                    </div>
+                    <div class="layui-tab-item">
+<!-- 结果开始-->
+<!-- 结果结束-->
+                    </div>
+                    <div class="layui-tab-item">
+<!-- 保存开始-->
+                        <form class="layui-form" action="" lay-filter="editform">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用例名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="required|len" autocomplete="off" min="2"
+                                        placeholder="用例名称" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">备注</label>
+                                <div class="layui-input-block">
+                                    <textarea name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-input-block">
+                                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit=""
+                                    lay-filter="api-save">
+                                    <i class="layui-icon layui-icon-ok"></i>
+                                    保存
+                                </button>
+                            </div>
+                        </form>
+<!-- 保存结束-->
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <script src="../../config/config.js"></script>
+    <script src="../../component/layui/layui.js"></script>
+    <script src="../../component/ui/ui.js"></script>
+    <script>
+        layui.use([
+            'form', 'layer', 'dropdown','element','laytpl','table'
+        ], function () {
+            let form = layui.form,
+                layer = layui.layer,
+                $ = layui.$,
+                element = layui.element,
+                table = layui.table,
+                laytpl = layui.laytpl,
+                dropdown = layui.dropdown,
+                req = _req();
+            Array.prototype.remove = function(val) { 
+                let index = this.indexOf(val); 
+                if (index > -1) { 
+                    this.splice(index, 1); 
+                } 
+            };
+            form.verify({
+                len: (val, item) => {
+                    let min = item.getAttribute("min")
+                    if (val.length < min) {
+                        return '长度不能小于' + min;
+                    }
+                }
+            })
+            _get(layui, 'apitest/addBefore?aid=' + req.aid, res => {
+                console.log(res)
+                //顶部表单渲染
+                form.val('testform', res.api)
+                //参数开始
+                laytpl($('#data-tpl').html()).render(res.params, function(html){
+                    $('#data-area').html(html);
+                })
+                table.init('data-table',{
+                    limit : 1000,
+                    page: false,
+                    skin: 'line',
+                    toolbar: '#data-toolbar',
+                    defaultToolbar: []
+                 });
+                 table.on('tool(data-table)', function(obj) {
+                    if (obj.event === 'del') {
+						obj.del();
+					}
+                 })
+                 table.on('toolbar(data-table)', function(obj) {
+					if (obj.event === 'add') {
+						window.addData();
+					} else if (obj.event === 'init') {
+						window.initData();
+					}
+				});
+                window.addData = () => {
+                    let d = $.extend([],table.cache['data-table']);
+                    //console.log(d)
+                    let add = $.extend({},d[0])
+                    add.key = '';
+                    add.def = '';
+                    d.unshift(add);
+                    //console.log(d)
+                    table.reload('data-table',{data : d})
+                }
+                window.initData = () => {
+                    table.reload('data-table',{data : res.params})
+                }
+                //参数结束
+                //headers开始
+                laytpl($('#head-tpl').html()).render(res.headers, function(html){
+                    $('#head-area').html(html);
+                })
+                table.init('head-table',{
+                    limit : 1000,
+                    page: false,
+                    skin: 'line',
+                    toolbar: '#head-toolbar',
+                    defaultToolbar: []
+                 });
+                 table.on('tool(head-table)', function(obj) {
+                    if (obj.event === 'delhead') {
+						obj.del();
+					}
+                 })
+                 table.on('toolbar(head-table)', function(obj) {
+					if (obj.event === 'addhead') {
+						window.addheadData();
+					} else if (obj.event === 'inithead') {
+						window.initheadData();
+					}
+				});
+                window.addheadData = () => {
+                    let d = $.extend([],table.cache['head-table']);
+                    //console.log(d)
+                    let add = $.extend({},d[0])
+                    add.key = '';
+                    add.val = '';
+                    d.unshift(add);
+                    //console.log(d)
+                    table.reload('head-table',{data : d})
+                }
+                window.initheadData = () => {
+                    table.reload('head-table',{data : res.headers})
+                }
+                //headers结束
+                //预想开始
+                //预想结构开始
+                laytpl($('#restop-tpl').html()).render(res.restop, function(html){
+                    $('#restop-area').html(html);
+                })
+                table.init('restop-table',{
+                    limit : 1000,
+                    page: false,
+                    skin: 'line',
+                    data : res.restop,
+                    toolbar: '#restop-toolbar',
+                    defaultToolbar: []
+                 });
+                 //预想结构编辑事件
+                 table.on('tool(restop-table)', function(obj) {
+                    if (obj.event === 'delrestop') {
+						obj.del();
+					}
+                 })
+                 //预想结构顶部事件
+                 table.on('toolbar(restop-table)', function(obj) {
+					if (obj.event === 'addrestop') {
+						window.addrestopData();
+					} else if (obj.event === 'initrestop') {
+						window.initresTop();
+					}
+				});
+                //预想结构新增
+                window.addrestopData = () => {
+                    let d = $.extend([],table.cache['restop-table']);
+                    //console.log(d)
+                    let add = $.extend({},d[0])
+                    add.key = '';
+                    add.val = '';
+                    d.unshift(add);
+                    //console.log(d)
+                    table.reload('restop-table',{data : d})
+                }
+                //预想结构初始化
+                window.initresTop = () => {
+                    table.reload('restop-table',{data : res.restop})
+                }
+                //预想结构结束
+                //预想数据开始
+                //数据初始化
+                table.init('resdata-table',{
+                    limit : 1000,
+                    page: false,
+                    skin: 'line',
+                    toolbar: '#resdata-toolbar',
+                    defaultToolbar: []
+                 });
+                 //预想数据编辑
+                 let hasCache = [];//预想数据的缓存
+
+                 table.on('tool(resdata-table)', function(obj) {
+                    if (obj.event === 'delresdata') {
+						obj.del();
+                        //删除深度数据
+                        let id = obj.data.dataId + '_' + obj.data.key;
+                        if(hasCache.includes(id)) {
+                            hasCache.remove(id);
+                            $('#deep_' + id).remove()
+                        }
+					}
+                    else if(obj.event === 'deepresdata') {
+                        window.deepresData(obj);
+                    }
+                 })
+                 
+                 //预想数据工具栏
+                 table.on('toolbar(resdata-table)', function(obj) {
+					
+                    if (obj.event === 'addresDataOne') {
+						window.addresDataOne();
+					} else if (obj.event === 'addresDataDb') {
+						window.addresDataDb();
+					}
+				});
+                //预想数据新增
+                window.addresDataOne = () => {
+                    let d = $.extend([],table.cache['resdata-table']);
+                    let dataId = $('input:radio[name=dataTopField]:checked').val();
+                    //console.log(dataId)
+                    if(!dataId) {
+                        layer.msg('请在结构表中选择数据对象',{icon : 2})
+                        return false;
+                    }
+                    let add = {
+                            key : '',
+                            val : '',
+                            dtype : 'exist',
+                            dataId
+                        };
+                    d.unshift(add);
+                    console.log(d)
+                    //table.reload('resdata-table',{data : d})
+                    //laytpl($('#resdata-tpl').html()).render(d, function(html){
+                    //    $('#resdata-area').html(html);
+                    //})
+                    table.reload('resdata-table',{data : d})
+                }
+                //预想数据新增
+                
+                window.deepresData = (obj) => {
+                    //console.log(obj)
+                    if(obj.data.key == ''){
+                        layer.msg('请先设置该字段标志',{icon : 2})
+                        return false;
+                    }
+                    //console.log($(obj.tr).find('.layui-this').text())
+                    if($(obj.tr).find('.layui-this').text() != '存在') {
+                        layer.msg('该字段做深度判断应该选择“存在”',{icon : 2})
+                        return false;
+                    }
+                    //let dataId = $('input:radio[name=dataTopField]:checked').val();
+                    //console.log(obj.data)
+                    //return;
+                    if(!obj.data.dataId) {
+                        layer.msg('请在结构表中选择数据对象',{icon : 2})
+                        return false;
+                    }
+                    let deepKey = obj.data.dataId + '_' + obj.data.key;
+                    let renderData = {
+                        key : deepKey
+                    }
+                    laytpl($('#deeptpl').html()).render(renderData, function(html){
+                        //$('#deeparea').html(html);
+                        if(!hasCache.includes(deepKey)) {
+                            $('#deeparea').append(html);
+                            hasCache.push(deepKey)
+                        }else{
+                            return false;
+                        }
+
+                        table.init('deeptable_' + deepKey,{
+                            limit : 1000,
+                            page: false,
+                            skin: 'line'
+                        });
+                        table.on("tool(deeptable_" + deepKey + ")", function(obj) {
+                            if (obj.event === 'delresdata') {
+                                obj.del();
+                                //删除深度数据
+                                let id = obj.data.dataId + '_' + obj.data.key;
+                                if(hasCache.includes(id)) {
+                                    hasCache.remove(id);
+                                    $('#deep_' + id).remove()
+                                }
+                            }
+                            else if(obj.event === 'deepresdata') {
+                                window.deepresData(obj);
+                            }
+                        })
+                        $('#deeparea').on('click', '.addDeepOne', e => {
+                            //console.log(e)
+                            let key = $(e.target).attr('data-id')
+                            //console.log(key)
+                            let d = $.extend([],table.cache['deeptable_' + deepKey]);
+                            let add = {
+                                    key : '',
+                                    val : '',
+                                    dtype : 'exist',
+                                    dataId : key
+                                };
+                            d.unshift(add);
+                            //console.log(d)
+                            table.reload('deeptable_' + deepKey,{data : d})
+                        })
+
+                    })
+                    
+                }
+                //预想数据结束
+                //预想结束
+            });
+            //监听提交
+            form.on('submit(api-save)', function (data) {
+                data = data.field;
+                _post(layui, 'apitest/add', data, res => {
+                    //console.log(res)
+                    parent
+                        .layui
+                        .table
+                        .reload("api-table");
+                    parent
+                        .layer
+                        .close(parent.layer.getFrameIndex(window.name)); //关闭当前页
+
+                })
+
+                return false;
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>任务看板</title>
+    <link rel="stylesheet" href="/admin/component/ui/css/ui.css" />
+    <link rel="stylesheet" href="css/dragula.css" />
+    <link rel="stylesheet" href="css/kanban.css" />
+
+  </head>
+  <body>
+    <div class="header">
+        <div class="header_left">
+          <input type="text" name="title" id="title" value="我的看板" placeholder="请输入看板名称">
+        </div>
+        <div class="header_right layui-btn-group">
+          <button type="button" id="saveData" title="保存" class="layui-btn layui-btn-normal layui-bg-red layui-btn-sm">
+            <i class="icon pear-icon pear-icon-save"></i>
+          </button>
+          <button type="button" id="addKanban" title="添加面板" class="layui-btn layui-btn-normal layui-bg-cyan layui-btn-sm">
+            <i class="layui-icon layui-icon-addition"></i>
+          </button>
+          <!--button type="button" id="setKanban" title="按时间查看" class="layui-btn layui-btn-normal layui-bg-orange layui-btn-sm">
+            <i class="layui-icon layui-icon-date"></i>
+          </button>
+          <button type="button" id="setKanban" title="甘特图查看" class="layui-btn layui-btn-normal layui-bg-black layui-btn-sm">
+            <i class="layui-icon layui-icon-chart-screen"></i>
+          </button>
+          <button type="button" id="setKanban" title="设置" class="layui-btn layui-btn-normal layui-btn-sm">
+            <i class="layui-icon layui-icon-set"></i>
+          </button-->
+          
+ 
+        </div>
+    </div>
+    <div id="myKanban"></div>
+    <script src="/admin/config/config.js"></script>
+    <script src="/admin/component/layui/layui.js"></script>
+    <script src="js/dragula.js"></script>
+    <script src="js/kanban.js"></script>
+    <script src="js/init.js"></script>
+  </body>
+</html>

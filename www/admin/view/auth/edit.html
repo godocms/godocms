@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加角色</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../component/ui/css/ui.css" />
+
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="editform">
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="main-container">
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入角色名称" class="layui-input">
+                </div>
+            </div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">状态</label>
+				<div class="layui-input-block">
+				<input type="radio" name="status" value="0" title="开启" checked>
+				<input type="radio" name="status" value="1" title="关闭">
+				</div>
+			</div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">菜单列表</label>
+                <div class="layui-input-block">
+                   <div id="treearea"></div>
+                </div>
+            </div>
+            
+			  <div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">备注</label>
+				<div class="layui-input-block">
+				<textarea name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+				</div>
+			</div>
+
+            </div>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="button-container">
+            <input type="hidden" name="id">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+        </div>
+    </div>
+</form>
+<script src="../../config/config.js"></script>
+<script src="../../component/layui/layui.js"></script>
+<script src="../../component/ui/ui.js"></script>
+<script>
+    layui.use(['form','layer','tree'], function () {
+        let form = layui.form
+            , layer = layui.layer
+			, $ = layui.$
+			, tree = layui.tree
+            , req = _req();
+
+           //渲染
+		   _get(layui, 'auth/beforEdit?id=' + req.id, res => {
+               form.val("editform",res);
+			   tree.render({
+			     elem: '#treearea'//绑定元素
+					,showCheckbox : true
+					,data: res.menus
+					,id: 'trees' //定义索引
+				});
+                //console.log(res.rules)
+                if(res.rules.length > 0){
+                    tree.setChecked('trees', res.rules.split(','));
+                }
+		   });
+           
+        
+        //监听提交
+        form.on('submit(user-save)', function (data) {
+			data = data.field;
+			let arr = tree.getChecked('trees');
+			let list = [];
+			let treeIds = function(arr) {
+				for (const item of arr) {
+					list.push(item.id);
+					let subs = item.children;
+					if (subs && subs.length > 0) {
+						treeIds(subs, list);
+					}
+				}
+				return list.join(',');	//以逗号拼接返回
+			}
+			data.rules = treeIds(arr);
+            //console.log(data)
+			_post(layui, 'auth/edit', data, res => {
+				//console.log(res)
+				parent.layui.table.reload("role-table");
+				parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+				
+			})
+           
+            return false;
+        });
+
+
+
+    });
+</script>
+
+</body>
+</html>

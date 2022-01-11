@@ -1,0 +1,81 @@
+{
+  "name": "godocms",
+  "description": "godo",
+  "version": "1.0.0",
+  "author": "ruitao",
+  "bin": {
+    "godo": "./bin/godo"
+  },
+  "scripts": {
+    "start": "node production.js",
+    "dev": "node development.js",
+    "test": "THINK_UNIT_TEST=1 nyc ava test/ && nyc report --reporter=html",
+    "compile": "babel --no-babelrc src/ --presets think-node --out-dir app/",
+    "doc": "apidoc-markdown -i src -t data/doc/tpl.md -o www/docs/doc --multi",
+    "lint": "eslint src/",
+    "lint-fix": "eslint --fix src/"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "cron-parser": "^4.2.1",
+    "json2md": "^1.12.0",
+    "jsonwebtoken": "^8.5.1",
+    "koa-helmet": "^6.1.0",
+    "koa-static-router": "^1.5.0",
+    "koa2-ratelimit": "^0.9.0",
+    "luckyexcel": "^1.0.1",
+    "mysql-import": "^5.0.21",
+    "mysql-ssh": "^1.0.6",
+    "mysqldump": "^3.2.0",
+    "pdf2json": "^2.0.0",
+    "socket.io-redis": "^6.1.1",
+    "svg-captcha": "^1.4.0",
+    "tesseract.js-node": "^0.1.0",
+    "textract": "^2.5.0",
+    "think-cache": "^1.0.0",
+    "think-cache-file": "^1.0.8",
+    "think-cache-redis": "^1.2.6",
+    "think-logger3": "^1.0.0",
+    "think-model": "^1.0.0",
+    "think-model-mysql": "^1.0.0",
+    "think-session": "^1.0.0",
+    "think-session-file": "^1.0.5",
+    "think-session-redis": "^1.1.4",
+    "think-websocket": "^1.0.8",
+    "think-websocket-socket.io": "^1.0.12",
+    "thinkjs": "^3.0.0"
+  },
+  "devDependencies": {
+    "apidoc-markdown": "^7.0.1",
+    "ava": "^0.18.0",
+    "babel-cli": "^6.24.1",
+    "babel-preset-think-node": "^1.0.0",
+    "commander": "^8.3.0",
+    "eslint": "^4.2.0",
+    "eslint-config-think": "^1.0.0",
+    "node-notifier": "^5.0.2",
+    "nyc": "^7.0.0",
+    "think-babel": "^1.0.3",
+    "think-inspect": "0.0.2",
+    "think-watcher": "^3.0.0"
+  },
+  "repository": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "readmeFilename": "README.md",
+  "thinkjs": {
+    "metadata": {
+      "name": "godocms",
+      "description": "godo",
+      "author": "ruitao",
+      "babel": true,
+      "defaultModule": "home"
+    },
+    "projectName": "demo",
+    "template": "/usr/local/lib/node_modules/think-cli/default_template",
+    "clone": false,
+    "isMultiModule": true
+  }
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<title>万年历</title>
+
+<meta charset="utf-8"/>
+<meta name="renderer" content="webkit">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="/admin/tools/rili/libs/rili.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+
+<div class="master" id="id_container">
+  
+<!-- 假日方案 -->
+<div class="zh-almanac" id="id_almanac" data-id="2">
+  <div class="hint-bar clearfix">
+    <span class="title-bar" id="GZ">
+    </span>
+    <div class="control-bar">
+      <div class="control-module year-control">
+        <a class="prev" id="nianjian" action="prev" href="javascript:;"></a>
+        <div class="control"><i class="trigger"></i>
+          <div val="2015" class="field year">2015年</div>
+        </div>
+        <a class="next" id="nianjia" action="next" href="javascript:;"></a>
+        <ul class="list year-list hidden">
+        </ul>
+      </div>
+      <div class="control-module month-control">
+        <a class="prev" id="yuejian" action="prev" href="javascript:;"></a>
+        <div class="control"><i class="trigger"></i>
+          <div val="7" class="field month">7月</div>
+        </div>
+        <a class="next" id="yuejia"  action="next" href="javascript:;"></a>
+        <ul class="list month-list hidden">
+        </ul>
+      </div>
+      <div class="btn-today">返回今天</div>
+    </div>
+  </div>
+  <div class="alc-container">
+    <div class="left">
+      <ul class="dates-hd clearfix">
+        <li data-id="6" class="days-title last ">日</li>
+        <li data-id="0" class="days-title ">一</li>
+        <li data-id="1" class="days-title ">二</li>
+        <li data-id="2" class="days-title ">三</li>
+        <li data-id="3" class="days-title ">四</li>
+        <li data-id="4" class="days-title ">五</li>
+        <li data-id="5" class="days-title ">六</li>
+      </ul>
+      <ol class="dates-bd clearfix">
+      </ol>
+
+    </div>
+    <div class="right">
+      <div class="almanac-tips">
+        <div class="dates-bar">
+          <span class="date"></span><span class="weekday"></span>
+        </div>
+        <div class="date-show-panel"></div>
+        <div class="desc">
+          <div class="lunar"></div>
+          <div class="lunar-ganzhi"></div>
+            <div class="lunar-term"></div>
+          </div>
+        </div>
+        <div class="almanac-extra clearfix">
+          <div class="suited">
+            <h3 class="st-label">宜</h3>
+            <ul class="st-items clearfix" title="">
+            </ul>
+          </div>
+          <div class="tapu">
+            <h3 class="st-label">忌</h3>
+            <ul class="st-items clearfix" title="">
+            </ul>
+          </div>
+          <div class="ban hidden">
+            <ul class="st-items clearfix" title="">
+            </ul>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- //假日方案 -->
+
+<!-- Site footer -->
+<footer>
+  
+</footer>
+  <!-- //Site footer -->
+</div>
+
+
+
+<!-- 测试系统 -->
+<script src="/admin/tools/rili/libs/jquery.js"></script> 
+
+<script src="/admin/tools/rili/libs/rili.js"></script>
+<script>
+$(document).ready(function() {
+
+  $("#id_almanac").almanac({
+    /**
+     * 画日历之后调用函数
+     */
+    afterDrawCld: function(year, month){
+      // console.log('加载-调用回调函数 完成');
+    },
+    /**
+     * 双击某一天的事件
+     */
+    dbClickDay: function(elem){
+      var _this = $(elem);
+      // console.log('阳历：' + _this.attr('data-year') + '年' + _this.attr('data-month') + '月' + _this.attr('data-solor'));
+    },
+    /**
+     * 单击某一天的事件
+     */
+    clickDay: function(elem){
+      var _this = $(elem);
+      // console.log('阳历：' + _this.attr('data-year') + '年' + _this.attr('data-month') + '月' + _this.attr('data-solor'));
+    }
+  });
+
+});
+</script>
+</body>
+</html>

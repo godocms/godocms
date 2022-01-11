@@ -1,0 +1,162 @@
+@theme-color: #009688;
+@danger-color: #ff5722;
+
+.icon-selected-plus-container {
+    position: relative;
+
+    &.icon-selected-plus-simple {
+        .icon-selected-plus-input-container {
+            .icon-selected-plus-echo-container {
+                cursor: pointer;
+                transition: 0.2s;
+                &:hover {
+                    border-radius: 2px;
+                    border-color: @theme-color;
+                }
+            }
+        }
+    }
+
+    &.icon-selected-plus-position-top {
+        .icon-selected-plus-icon-container {
+            bottom: 2px;
+            left: 0px;
+            animation: icon-selected-plus-icon-container-animate-down 0.2s linear;
+        }
+    }
+
+    &.icon-selected-plus-position-bottom {
+        .icon-selected-plus-icon-container {
+            top: 42px;
+            left: 0;
+            animation: icon-selected-plus-icon-container-animate-up 0.2s linear;
+        }
+    }
+
+    .icon-selected-plus-input-container {
+        position: relative;
+        z-index: 0;
+
+        .icon-selected-plus-input {
+            position: relative;
+            z-index: 2;
+            float: left;
+            width: 200px;
+        }
+
+        .icon-selected-plus-echo-container {
+            position: relative;
+            z-index: 1;
+            float: left;
+            margin-left: -1px;
+            border-radius: 0px 2px 2px 0px;
+            border: 1px solid #eee;
+            > .icon-selected-plus-icon-echo {
+                display: inline-block;
+                vertical-align: middle;
+                width: 36px;
+                height: 36px;
+                text-align: center;
+                > i {
+                    display: inline-block;
+                    margin: 6px;
+                    font-size: 24px;
+                }
+            }
+            > .layui-icon-close-fill {
+                position: absolute;
+                z-index: 2;
+                right: 0;
+                top: 0;
+                font-size: 18px;
+                transform: translate(50%, -50%);
+                background-color: #fff;
+                border-radius: 50%;
+                transition: 0.2s;
+                cursor: pointer;
+
+                &:hover {
+                    color: @danger-color;
+                }
+            }
+        }
+    }
+
+    .icon-selected-plus-icon-container {
+        position: absolute;
+        z-index: 961005;
+        width: 480px;
+        height: 300px;
+        border-radius: 3px;
+        border: 1px solid #eee;
+        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        background-color: #fff;
+
+        &::-webkit-scrollbar {
+            width: 5px;
+            background-color: #f6f6f6;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 2.5px;
+            background-color: @theme-color;
+        }
+
+        .icon-selected-plus-icon {
+            float: left;
+            width: 20%;
+            padding: 15px;
+            box-sizing: border-box;
+            transition: 0.2s;
+            text-align: center;
+            cursor: pointer;
+
+            &:hover,
+            &.icon-selected-plus-selected {
+                color: @theme-color;
+                .icon-selected-plus-icon-ico {
+                    transform: scale(1.2);
+                }
+            }
+            .icon-selected-plus-icon-ico {
+                display: block;
+                height: 64px;
+                line-height: 64px;
+                transition: 0.2s;
+                font-size: 32px;
+            }
+            .icon-selected-plus-icon-name {
+                font-size: 12px;
+                line-height: 20px;
+                display: block;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                -o-text-overflow: ellipsis;
+            }
+        }
+    }
+}
+
+@keyframes icon-selected-plus-icon-container-animate-up {
+    0% {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0x);
+    }
+}
+
+@keyframes icon-selected-plus-icon-container-animate-down {
+    0% {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0x);
+    }
+}

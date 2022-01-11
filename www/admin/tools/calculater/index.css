@@ -1,0 +1,81 @@
+body {
+	background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	min-height: 100vh;
+}
+
+.container {
+	--button-width: 80px;
+	--button-height: 80px;
+	background: #fcfcfc;
+
+	display: grid;
+	grid-template-areas: "result result result result"
+		"btn-on btn-clear btn-per btn-div"
+		"number-7 number-8 number-9 btn-mul"
+		"number-4 number-5 number-6 btn-sub"
+		"number-1 number-2 number-3 btn-add"
+		"number-0 btn-dot btn-cal btn-cal";
+	grid-template-columns: repeat(4, var(--button-width));
+	grid-template-rows: repeat(6, var(--button-height));
+
+	/* box-shadow: -8px -8px 16px -10px rgba(255, 255, 255, 1), 8px 8px 16px -10px rgba(0, 0, 0, .15); */
+	padding: 24px;
+	border-radius: 20px;
+}
+
+.container button {
+	margin: 4px;
+	padding: 0;
+	border: 0;
+	display: block;
+	outline: none;
+	border-radius: 40px;
+	font-size: 24px;
+	font-family: Helvetica;
+	font-weight: normal;
+	color: #999;
+	background: #ffffff;
+	box-shadow: 8px 8px 16px -10px #d9d9d9,
+		-8px -8px 16px -10px #ffffff;
+}
+
+.container button:active {
+	background: #ffffff;
+	box-shadow: 1px 1px 5px #eee inset;
+}
+
+/* .container button:hover {
+	background: linear-gradient(145deg, #ffffff, #e6e6e6);
+	box-shadow: 8px 8px 16px -10px #d9d9d9,
+		-8px -8px 16px -10px #ffffff;
+} */
+
+.result {
+	outline: none;
+	border: none;
+	background: #f8f8f8;
+	margin: 8px 6px;
+	border-radius: 8px;
+	text-align: right;
+	line-height: var(--button-height);
+	font-size: 48px;
+	font-family: Helvetica;
+	padding: 0 20px;
+	color: #999;
+}
+
+@media screen and (max-width: 568px){
+	.container{
+		--button-width: 20vw;
+		--button-height: 20vw;
+		padding: 6vw;
+	}
+	.container button{
+		border-radius: 10vw;
+		font-size: 6vw;
+	}
+}

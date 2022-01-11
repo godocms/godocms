@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加数据</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../component/ui/css/ui.css" />
+
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="editform">
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="main-container" id="data-area">
+            <!--div class="layui-form-item">
+                <label class="layui-form-label">登录名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="username" lay-verify="required|len" autocomplete="off" min="3" placeholder="请输入管理员登录名" class="layui-input">
+                </div>
+            </div-->
+            
+            
+            
+
+            </div>
+        </div>
+    </div>
+    <script id="data-tpl" type="text/html">
+  {{#  layui.each(d, function(index, item){ }}
+    <div class="layui-form-item">
+                <label class="layui-form-label">{{item}}</label>
+                <div class="layui-input-block">
+                    <input type="text" name="{{item}}" autocomplete="off" placeholder="{{item}}" class="layui-input">
+                </div>
+            </div>
+  {{#  }); }}
+  {{#  if(d.length === 0){ }}
+    无数据
+  {{#  } }} 
+  </ul>
+</script>
+    <div class="bottom">
+        <div class="button-container">
+            <input type="hidden" name="_table">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+        </div>
+    </div>
+</form>
+<script src="../../config/config.js"></script>
+<script src="../../component/layui/layui.js"></script>
+<script src="../../component/ui/ui.js"></script>
+<script>
+    layui.use(['form','layer','laytpl'], function () {
+        let form = layui.form
+            , layer = layui.layer
+			, $ = layui.$
+			, laytpl = layui.laytpl
+            , req = _req();
+           //渲染
+        console.log(req)
+        let tplarea = $('#data-tpl').html(),
+            fieldsData = req._fields.split(',');
+        laytpl(tplarea).render(fieldsData, function(html){
+            $('#data-area').html(html);
+            form.val("editform",req);
+            
+        });
+           /*
+		_get(layui, 'db/dataBefore?table=' + req.table, res => {
+            //console.log(res)
+            form.val("editform",res);
+		},err => {
+            console.log(err)
+        });*/
+           
+        
+        //监听提交
+        form.on('submit(user-save)', function (data) {
+			data = data.field;
+			_post(layui, 'db/addData', data, res => {
+				//console.log(res)
+				parent.layui.table.reload("data-table");
+				parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+				
+			})
+           
+            return false;
+        });
+
+
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,366 @@
+html {
+  font-size: 10px;
+}
+body {
+  background-color: #fff;
+  color: #333;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.42857;
+}
+/* 日历 */
+.zh-almanac {
+	margin-top: 5px;
+	height: 100%;
+	background-color: #FFFFFF;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: hidden;
+	width: 720px;
+}
+.zh-almanac *{
+  box-sizing: border-box;
+}
+.alc-container{
+	position: relative;
+	color: #333;
+	border: 1px solid #d2d2d2;
+}
+.alc-container .left{
+	width: 560px;
+	padding: 0;
+}
+.alc-container .right {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.btn-alc {
+  cursor: pointer;
+  line-height: 22px;
+  margin: 0 5px;
+  margin-top: 2px;
+  overflow: hidden;
+  padding-left: 7px;
+  padding-right: 7px;
+  width: auto;
+  background-color: #5bc0de;
+  border-color: #46b8da;
+  color: #fff;
+}
+
+.hint-bar {
+  background-color: #f3f5fa;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+  z-index: 200;
+}
+.control-bar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 10px 0px;
+}
+.control-bar .control-module {
+  background-color: #f3f5fa;
+  border: 1px solid #c9cccf;
+  float: left;
+  margin-right: 5px;
+  position: relative;
+}
+.control-bar .control {
+  border-left: 1px solid #c9cccf;
+  border-right: 1px solid #c9cccf;
+  float: left;
+  height: 12px;
+  line-height: 12px;
+  padding: 4px 10px 0;
+}
+.control .field {
+  float: left;
+  height: 12px;
+  line-height: 12px;
+  padding: 0;
+}
+.year-control .control,
+.month-control .control {
+  width: 80px;
+  height: 20px;
+}
+
+.control-module .prev,
+.control-module .next {
+  float: left;
+  height: 20px;
+  width: 15px;
+}
+.control-module .prev,
+.control-module .next,
+.control-module .trigger {
+  background: url("images/bar.gif") no-repeat;
+}
+.control-module .next {
+  background-position: 0 -25px;
+}
+.control-module .trigger {
+  background-position: 0 -50px;
+  cursor: pointer;
+  float: right;
+  height: 20px;
+  margin-right: -10px;
+  margin-top: -4px;
+  width: 15px;
+}
+
+.control-bar .btn-today {
+  background-color: #fcfcfc;
+  border: 1px solid #c9cccf;
+  cursor: pointer;
+  float: left;
+  padding: 0px 10px;
+  text-align: center;
+  height: 22px;
+  line-height: 22px;
+}
+.control-bar .list {
+  position: absolute;
+  top: 20px;
+  height: 169px;
+  background: #fff;
+  border-color: #c9cccf;
+  border-style: none solid solid;
+  border-width: 0 1px 1px;
+  padding: 0;
+  margin-top: -2px;
+  left: 15px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 200;
+  list-style: none;
+}
+.control-bar .list li {
+  color: #9a9a9a;
+  cursor: pointer;
+  width: 78px;
+  height: 20px;
+  line-height: 20px;
+  margin-bottom: 1px;
+  text-align: left;
+  padding-left: 10px;
+  z-index: 200;
+}
+.control-bar .list li:hover, .control-bar .list li.on {
+  background-color: #77a1b4;
+  color: #fff;
+}
+
+/* 日历 */
+.dates-hd,
+.dates-bd{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	}
+.dates-hd .days-title {
+  padding: 5px;
+  width: 80px;
+  float: left;
+  background: none repeat scroll 0 0 #fefbeb;
+  border-color: #f1ebe4;
+  border-style: solid solid solid none;
+  border-width: 1px 1px 1px medium;
+  font-size: 14px;
+  text-align: center;
+}
+.dates-hd .days-title.weekend{
+  color: #b04343;
+}
+.dates-bd .cross-month {
+    background: none repeat scroll 0 0 #f5f5f5;
+    opacity: 0.6;
+}
+.dates-bd .today {
+   background: url("images/today.gif") no-repeat scroll center top rgba(0, 0, 0, 0);
+}
+.rest .border, .work .border {
+	background-image: url("images/vacation.gif");
+	background-repeat: no-repeat;
+	display: block;
+	height: 16px;
+	left: 1px;
+	overflow: hidden;
+	position: absolute;
+	top: 1px;
+	width: 15px;
+	}
+.rest .border {
+	background-position: 0 0;
+}
+.work .border {
+	background-position: 0 -20px;
+}
+.dates-bd li span::selection {
+  background-color: #fff; 
+}
+.dates-bd li span::-moz-selection {
+  background-color: #fff; 
+}
+.dates-bd li span::-webkit-selection {
+  background-color: #fff; 
+}
+.dates-bd li {
+	position: relative;
+  width: 80px;
+  height: 65px;
+  float: left;
+  padding-top: 10px;
+  background: none repeat scroll 0 0 #fff;
+  border-bottom: 1px solid #f1ebe4;
+  border-right: 1px solid #f1ebe4;
+  cursor: pointer;
+  font-size: 18px;
+  z-index: 2;
+  text-align: center;
+  overflow: hidden;
+}
+.dates-bd li:hover,
+.dates-bd li.on {
+    background-color: #fefbeb;
+}
+.dates-bd li .layer{
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+  filter: alpha(opacity=0.8);
+  z-index: -1;
+}
+.dates-bd li .layer span{
+  width: 50%;
+  font-size: 14px;
+  float: left;
+  height: 16px;
+}
+.weekend .solar {
+    color: #b04343;
+}
+.dates-bd .solar {
+	font-weight: 600;
+	font-size: 28px;
+	line-height: 18px;
+	text-align: center;
+	width: 100%;
+}
+.lunar {
+  color: #999;
+  display: block;
+  font-size: 12px;
+  height: 25px;
+  line-height: 25px;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+.lunar-style .lunar { /*阴历节日*/
+  color: #8eb475;
+}
+.solar-style .lunar {/*阳历节日*/
+  color: #86a9c0;
+}
+.black-style .lunar { /*黑色星期五*/
+  color: #000;
+}
+.vacation .lunar{
+  color: #b04343;
+}
+.unover {   /*禁止滑动*/
+  background: none repeat scroll 0 0 #f4f1f1;
+  cursor: auto;
+}
+/* 右侧今日 */
+.almanac-tips {
+  border-bottom: 1px solid #d2d2d2;
+  height: 185px;
+  width: 140px;
+}
+.dates-bar {
+  margin: 15px 5px;
+}
+.weekday {
+  padding-left: 6px;
+}
+.date-show-panel {
+  color: #c00;
+  font-size: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+}
+.desc {
+  color: #999;
+}
+.lunar-ganzhi, 
+.lunar-term {
+  text-align: center;
+}
+/* 黄道吉日 */
+.almanac-extra {
+  border-bottom: 1px dashed #f1ebe4;
+  margin: 0 14px;
+  overflow: hidden;
+  padding-bottom: 15px;
+  width: 106px;
+}
+.almanac-extra .suited,
+.almanac-extra .tapu {
+  float: left;
+  padding: 8px 0;
+  width: 50px;
+}
+.almanac-extra .suited {
+  margin-right: 2px;
+}
+.almanac-extra .st-label {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  width: 55px;
+  margin: 2px;
+}
+.suited, .suited .st-label {
+    color: #b04343;
+}
+.tapu, .tapu .st-label {
+    color: #5b5b5b;
+}
+.almanac-extra .st-items {
+    padding: 10px 0 0;
+    list-style: none;
+}
+.st-items li {
+    float: left;
+    padding: 1px 0;
+    text-align: center;
+    width: 60px;
+}
+.ban .st-items li {
+    clear: both;
+    margin-top: 15px;
+    width: 100%;
+    color: #f00;
+    font-weight: bold;
+    font-size: 16px;
+}
+.hidden{
+  display: none;
+}
+.clearfix::before, .clearfix::after{
+  box-sizing: border-box;
+  clear: both;
+  content: " ";
+  display: table;
+}
